@@ -1,155 +1,206 @@
 import streamlit as st
 
-# --- Configuration & Branding ---
-BRAND_GOLD = "#D4AF37"
-BRAND_BLACK = "#1A1A1A"
-WHATSAPP_NUMBER = "201062796287" # Updated Number
-EMAIL_ADDRESS = "info@infinitycdt.com"
-
+# --- Page Configuration ---
 st.set_page_config(
-    page_title="Infinity CDT | Intero Desgin Calculator System",
-    page_icon="🏠",
-    layout="centered"
+    page_title=Infinity CDT  Intero System,
+    page_icon=🏠,
+    layout=wide
 )
 
-# --- Custom Luxury CSS ---
-st.markdown(f"""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-    html, body, [class*="css"] {{ font-family: 'Poppins', sans-serif; }}
+# --- Constants & Contact Data ---
+BRAND_GOLD = #D4AF37
+BRAND_BLACK = #0d0d0d
+WHATSAPP_NUMBER = 201062796287
+EMAIL_ADDRESS = connect@infinitycdt.com
+
+# --- UI Customization (Figma  Luxury Style) ---
+st.markdown(f
+    style
+    @import url('httpsfonts.googleapis.comcss2family=Montserratwght@300;400;600;700&display=swap');
     
-    .stApp {{ 
-        background-color: #ffffff; 
-        background-image: url("https://www.transparenttextures.com/patterns/architect.png"); 
-    }}
-    
-    .main-card {{
-        background: white; padding: 2rem; border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-left: 5px solid {BRAND_GOLD};
-    }}
-    
-    .stButton>button {{
-        background: {BRAND_BLACK}; color: {BRAND_GOLD} !important;
-        border: 1px solid {BRAND_GOLD}; border-radius: 10px; font-weight: bold; 
-        height: 3.5em; width: 100%; transition: 0.3s;
-    }}
-    
-    .stButton>button:hover {{
-        background: {BRAND_GOLD}; color: {BRAND_BLACK} !important;
+     {{ font-family 'Montserrat', sans-serif; }}
+
+    .stApp {{
+        background-color {BRAND_BLACK};
+        color #ffffff;
     }}
 
-    .package-box {{
-        background: #fdfaf0; border: 1px solid {BRAND_GOLD};
-        padding: 15px; border-radius: 10px; margin-bottom: 20px;
+     Hero Section with High-Quality Image Placeholder 
+    .hero-section {{
+        height 45vh;
+        background linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                    url('httpsimages.unsplash.comphoto-1613545325278-f24b0cae1224auto=format&fit=crop&q=80&w=2070');
+        background-size cover;
+        background-position center;
+        display flex;
+        flex-direction column;
+        justify-content center;
+        align-items center;
+        border-radius 0 0 40px 40px;
+        margin-bottom 40px;
+        text-align center;
     }}
-    
-    .sidebar-text {{ font-size: 0.9rem; color: #555; }}
-    </style>
-    """, unsafe_allow_html=True)
 
-# --- Sidebar: Logo & Social Media ---
-with st.sidebar:
-    # Company Logo (Please ensure logo.png is in the same GitHub folder)
-    try:
-        st.image("logo.png", use_container_width=True)
-    except:
-        st.markdown(f"<h1 style='color:{BRAND_GOLD}; text-align:center;'>INFINITY CDT</h1>", unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.markdown("### 📞 CONTACT US")
-    st.markdown(f"**Email:** connect@infinitycdt.com")
-    st.markdown(f"**WhatsApp:** +20 106 279 6287")
-    
-    st.markdown("---")
-    st.markdown("### 🌐 FOLLOW US")
-    st.markdown(f"""
-        <a href="https://www.facebook.com/InfinityCDT" target="_blank">Facebook</a><br>
-        <a href="https://www.instagram.com/InfinityCDT" target="_blank">Instagram</a><br>
-        <a href="https://www.tiktok.com/@infinitycdt" target="_blank">TikTok</a><br>
-        <a href="https://www.threads.com/@infinitycdt" target="_blank">Threads</a>
-    """, unsafe_allow_html=True)
-    st.markdown("---")
-    st.caption("Engineering Excellence © 2025")
+     Glassmorphism Effect 
+    .glass-card {{
+        background rgba(255, 255, 255, 0.03);
+        backdrop-filter blur(15px);
+        border 1px solid rgba(255, 255, 255, 0.1);
+        border-radius 25px;
+        padding 40px;
+        margin -80px auto 40px auto;
+        max-width 900px;
+        box-shadow 0 25px 50px rgba(0,0,0,0.6);
+    }}
 
-# --- Package Data (Based on your final prices) ---
+    .specs-box {{
+        background rgba(212, 175, 55, 0.05);
+        border-left 3px solid {BRAND_GOLD};
+        padding 20px;
+        border-radius 12px;
+        margin 25px 0;
+    }}
+
+     Premium Buttons 
+    .stButtonbutton {{
+        background {BRAND_GOLD} !important;
+        color #000 !important;
+        border none !important;
+        border-radius 50px !important;
+        padding 18px 50px !important;
+        font-weight 700 !important;
+        font-size 1.1rem !important;
+        letter-spacing 1.5px;
+        transition 0.4s all ease;
+        width 100%;
+        margin-top 20px;
+    }}
+    .stButtonbuttonhover {{
+        background #ffffff !important;
+        transform translateY(-3px);
+        box-shadow 0 10px 25px rgba(212, 175, 55, 0.4);
+    }}
+
+     Custom Inputs 
+    input, select, .stSelectbox div {{
+        background-color #1a1a1a !important;
+        color white !important;
+        border 1px solid #333 !important;
+        border-radius 12px !important;
+    }}
+    style
+    , unsafe_allow_html=True)
+
+# --- Sidebar Corporate Links ---
+with st.sidebar
+    try
+        st.image(logo.png, use_container_width=True)
+    except
+        st.markdown(fh2 style='color{BRAND_GOLD}; text-aligncenter;'INFINITY CDTh2, unsafe_allow_html=True)
+    
+    st.markdown(---)
+    st.markdown(### 🌐 FOLLOW US)
+    st.markdown(f
+        a href=httpswww.facebook.comInfinityCDT style=color#888; text-decorationnone; displayblock; margin10px 0;Facebooka
+        a href=httpswww.instagram.comInfinityCDT style=color#888; text-decorationnone; displayblock; margin10px 0;Instagrama
+        a href=httpswww.tiktok.com@infinitycdt style=color#888; text-decorationnone; displayblock; margin10px 0;TikToka
+        a href=httpswww.threads.com@infinitycdt style=color#888; text-decorationnone; displayblock; margin10px 0;Threadsa
+    , unsafe_allow_html=True)
+    
+    st.markdown(---)
+    st.markdown(### ✉️ INQUIRIES)
+    st.write(fEmail connect@infinitycdt.com)
+    st.write(fSupport +201062796287)
+    
+    st.markdown(---)
+    st.caption(Engineering Excellence © 2025)
+
+# --- Hero Banner ---
+st.markdown(f
+    div class=hero-section
+        h5 style='color{BRAND_GOLD}; letter-spacing8px; font-weight300;'INFINITY CONSTRUCTIONh5
+        h1 style='font-size 4.8rem; font-weight700; margin5px 0;'INTEROh1
+        p style='font-size 1.3rem; font-weight300; opacity0.6;'Precision Finishing Estimator Systemp
+    div
+    , unsafe_allow_html=True)
+
+# --- Data Dictionary (Merged from your CSV files) ---
 packages = {
-    "i-Modern": {
-        "price": (5000, 5600),
-        "specs": "• Elsewedy Cables (Certified)\n• SanChi/Kaptika Switches\n• GLC/Sipes Paints\n• 1st Grade Ceramic Flooring"
+    i-Modern {
+        range (5000, 5600),
+        target First Home  Investment,
+        specs ✅ Elsewedy Cables  ✅ Sanchi Switches  ✅ GLCSipes Paints  ✅ Laser Cut Ceramics
     },
-    "i-Smart": {
-        "price": (5900, 6800),
-        "specs": "• Schneider Panel + Avatar Switches\n• Smart Home & CCTV Prep\n• Indian/UAE Porcelain (60x120)\n• Jotun Fenomastic Paints"
+    i-Smart {
+        range (5900, 6800),
+        target Tech Lovers  Families,
+        specs ✅ Schneider Avatar Switches  ✅ Smart Home Prep  ✅ IndianUAE Porcelain (60x120)  ✅ Jotun Fenomastic
     },
-    "i-Elite": {
-        "price": (7100, 9000),
-        "specs": "• ABB/Hager Panel + Legrand Switches\n• Grohe Built-in Tanks\n• Spanish Porcelain or Trista Marble\n• Sound System & Central AC Prep"
+    i-Elite {
+        range (7100, 9000),
+        target Villas  Luxury Apartments,
+        specs ✅ Legrand Switches  ✅ Grohe Built-in Tanks  ✅ Spanish Porcelain  Marble  ✅ Sound System Prep
     },
-    "i-Signature": {
-        "price": (12000, 15000),
-        "specs": "• Full Automation (KNX/Control4)\n• Imported Book-match Marble\n• Engineered Natural Wood\n• Bespoke Interior Design"
+    i-Signature {
+        range (12000, 15000),
+        target Penthouses  VIP Palaces,
+        specs ✅ Full Automation (KNXControl4)  ✅ Book-match Marble  ✅ Engineered Wood  ✅ Custom Bespoke Designs
     }
 }
 
-# --- Main Interface ---
-st.markdown(f"<h1 style='color:{BRAND_BLACK}; text-align:center;'>Intero | Smart Calculator 📐</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;'>Get an instant engineering quote for your unit.</p>", unsafe_allow_html=True)
+# --- Main Calculator Form ---
+st.markdown('div class=glass-card', unsafe_allow_html=True)
 
-with st.container():
-    st.markdown('<div class="main-card">', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        name = st.text_input("Full Name", placeholder="e.g. Eng. Mina")
-    with col2:
-        phone = st.text_input("Mobile Number", placeholder="01xxxxxxxxx")
+col1, col2 = st.columns(2)
+with col1
+    name = st.text_input(YOUR NAME, placeholder=Full Name)
+with col2
+    phone = st.text_input(WHATSAPP, placeholder=01xxxxxxxxx)
 
-    area = st.number_input("Unit Area (sqm)", min_value=50, max_value=2000, value=120, step=5)
-    
-    selected_p = st.selectbox("Choose Finishing Package", list(packages.keys()))
-    
-    st.markdown(f"""
-        <div class="package-box">
-            <strong style="color:{BRAND_GOLD};">💎 {selected_p} Specifications:</strong><br>
-            <small style="white-space: pre-wrap;">{packages[selected_p]['specs']}</small>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    calculate_btn = st.button("Generate Instant Quote 🚀")
-    st.markdown('</div>', unsafe_allow_html=True)
+area = st.number_input(UNIT AREA (SQM), min_value=50, value=120, step=10)
+selected_p = st.selectbox(CHOOSE FINISHING PACKAGE, list(packages.keys()))
 
-# --- Results ---
-if calculate_btn:
-    if not name or not phone:
-        st.error("Please provide your name and contact number.")
-    else:
+st.markdown(f
+    div class=specs-box
+        strong style=color{BRAND_GOLD}; text-transformuppercase; font-size0.8rem;{selected_p} Package Includesstrongbr
+        span style=font-size0.9rem; opacity0.8;{packages[selected_p]['specs']}spanbr
+        small style=opacity0.5;Target {packages[selected_p]['target']}small
+    div
+, unsafe_allow_html=True)
+
+calculate_btn = st.button(GENERATE ESTIMATE 🚀)
+st.markdown('div', unsafe_allow_html=True)
+
+# --- Results Rendering ---
+if calculate_btn
+    if not name or not phone
+        st.error(Please provide your name and phone to generate the report.)
+    else
         st.balloons()
-        p_data = packages[selected_p]
-        total_min = area * p_data['price'][0]
-        total_max = area * p_data['price'][1]
-        avg_total = (total_min + total_max) / 2
+        min_p = area  packages[selected_p]['range'][0]
+        max_p = area  packages[selected_p]['range'][1]
+        avg_p = (min_p + max_p)  2
         
-        st.markdown(f"### 📄 Preliminary Quote for: {name}")
+        st.markdown(f
+            div style='text-aligncenter; padding 40px 0;'
+                h3 style='color{BRAND_GOLD}; font-weight300; letter-spacing2px;'ESTIMATED INVESTMENTh3
+                h1 style='font-size 6rem; margin0;'{int(avg_p),} small style='font-size1.2rem; opacity0.4;'EGPsmallh1
+                p style='opacity0.6; font-size1.1rem;'Estimate for {area} sqm under the {selected_p} package.p
+            div
+        , unsafe_allow_html=True)
         
-        c1, c2 = st.columns(2)
-        with c1:
-            st.metric("Estimated Total Cost", f"{int(avg_total):,} EGP")
-        with c2:
-            st.metric("Price per sqm", f"{p_data['price'][0]:,} EGP")
-
-        st.info(f"The estimate for this package ranges from **{total_min:,} EGP** to **{total_max:,} EGP** based on final material selection.")
-
-        # WhatsApp Message
-        msg = f"Hello Infinity CDT, I'm {name}. I generated a quote for {selected_p} package for a {area}sqm unit on Intero. I would like to book an inspection."
-        whatsapp_url = f"https://wa.me/{WHATSAPP_NUMBER}?text={msg.replace(' ', '%20')}"
+        # Professional WhatsApp Message
+        wa_msg = fHello Infinity CDT, I'm {name}. I've generated a quote for the {selected_p} package for my {area}sqm unit. Let's discuss the next steps.
+        whatsapp_url = fhttpswa.me{WHATSAPP_NUMBER}text={wa_msg.replace(' ', '%20')}
         
-        st.markdown(f"""
-            <a href="{whatsapp_url}" target="_blank">
-                <button style="width:100%; background-color:#25D366; color:white; padding:15px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:1.1em;">
-                    Send Quote to WhatsApp & Book Inspection 💬
-                </button>
-            </a>
-        """, unsafe_allow_html=True)
+        st.markdown(f
+            div style='text-aligncenter; margin-bottom 60px;'
+                a href={whatsapp_url} target=_blank style=text-decorationnone;
+                    button style=background#25D366; colorwhite; bordernone; padding22px 80px; border-radius50px; font-weightbold; cursorpointer; font-size1.3rem; box-shadow 0 10px 30px rgba(37, 211, 102, 0.2);
+                        START YOUR CONSULTATION 💬
+                    button
+                a
+            div
+        , unsafe_allow_html=True)
 
-st.markdown("<br><p style='text-align:center; color:#888;'>Infinity CDT | Your Path to Engineering Excellence</p>", unsafe_allow_html=True)
-
+st.markdown(fp style='text-aligncenter; opacity0.2; padding-bottom40px;'INFINITY CDT  Intero Pro v3.0p, unsafe_allow_html=True)
