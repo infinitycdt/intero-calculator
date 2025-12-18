@@ -1,24 +1,27 @@
 import streamlit as st
+import urllib.parse
 
 # --- Page Configuration ---
 st.set_page_config(
     page_title="Infinity CDT | Intero System",
-    page_icon="🏠",
+    page_icon="🏗️",
     layout="wide"
 )
 
 # --- Constants & Contact Data ---
 BRAND_GOLD = "#D4AF37"
-BRAND_BLACK = "#0d0d0d"
-WHATSAPP_NUMBER = "201062796287"  # تم تحديث الرقم بناءً على الكود الأصلي
+BRAND_BLACK = "#0d0d0d"  # Used for contrast elements
+BRAND_WHITE = "#ffffff"
+TEXT_COLOR = "#333333"
+WHATSAPP_NUMBER = "201062796287"
 EMAIL_ADDRESS = "connect@infinitycdt.com"
 
-# --- New Pricing & Logic Constants (From Text File) ---
-KITCHEN_COST = 14500 * 5  # 72,500 EGP
-FURNITURE_COST = 360500   # 360,500 EGP
-EXTRA_BATH_COST = 45000   # For each bath > 2
+# --- Logic Constants ---
+KITCHEN_COST = 72500   # 14500 * 5
+FURNITURE_COST = 360500
+EXTRA_BATH_COST = 45000
 
-# --- UI Customization (Figma / Luxury Style) ---
+# --- UI Customization (Light Professional Theme) ---
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
@@ -26,103 +29,100 @@ st.markdown(f"""
     
     * {{ font-family: 'Cairo', 'Montserrat', sans-serif; }}
 
+    /* Main Background - White */
     .stApp {{
-        background-color: {BRAND_BLACK};
-        color: #ffffff;
+        background-color: {BRAND_WHITE};
+        color: {TEXT_COLOR};
     }}
 
     /* Hero Section */
     .hero-section {{
-        height: 45vh;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                    url('https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=2070');
+        height: 40vh;
+        background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.7)), 
+                    url('https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=2000');
         background-size: cover;
         background-position: center;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        border-radius: 0 0 40px 40px;
+        border-bottom: 5px solid {BRAND_GOLD};
         margin-bottom: 40px;
         text-align: center;
+        color: #000;
     }}
 
-    /* Glassmorphism Effect */
+    /* Cards Styling (Light Theme) */
     .glass-card {{
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 25px;
+        background: #F8F9FA;
+        border: 1px solid #E9ECEF;
+        border-radius: 20px;
         padding: 40px;
-        margin: -80px auto 40px auto;
-        max-width: 900px;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        margin: -60px auto 40px auto;
+        max-width: 1000px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        position: relative;
     }}
 
     .specs-box {{
-        background: rgba(212, 175, 55, 0.05);
-        border-right: 3px solid {BRAND_GOLD}; /* Changed to right for RTL/Arabic feel compatibility */
+        background: #FFFBF0; /* Light Gold Tint */
+        border-right: 4px solid {BRAND_GOLD};
         padding: 20px;
-        border-radius: 12px;
+        border-radius: 8px;
         margin: 25px 0;
         text-align: right;
+        color: #444;
     }}
 
-    /* Premium Buttons */
-    .stButton>button {{
-        background: {BRAND_GOLD} !important;
-        color: #000 !important;
-        border: none !important;
-        border-radius: 50px !important;
-        padding: 18px 50px !important;
-        font-weight: 700 !important;
-        font-size: 1.1rem !important;
-        letter-spacing: 1.5px;
-        transition: 0.4s all ease;
-        width: 100%;
-        margin-top: 20px;
-    }}
-    .stButton>button:hover {{
-        background: #ffffff !important;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
-    }}
-
-    /* Custom Inputs */
-    input, select, .stSelectbox div, .stNumberInput div {{
-        background-color: #1a1a1a !important;
-        color: white !important;
-        border: 1px solid #333 !important;
-        border-radius: 12px !important;
+    /* Inputs Styling */
+    .stTextInput input, .stNumberInput input, .stSelectbox div, .stTextArea textarea {{
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #DDDDDD !important;
+        border-radius: 8px !important;
     }}
     
-    /* Checkbox Styling */
-    .stCheckbox label {{
-        font-size: 1.1rem;
-        color: {BRAND_GOLD};
+    /* Buttons */
+    .stButton>button {{
+        background: {BRAND_GOLD} !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 15px 40px !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        transition: 0.3s;
+        width: 100%;
     }}
+    .stButton>button:hover {{
+        background: #b5952f !important;
+        transform: translateY(-2px);
+    }}
+
+    /* Headings */
+    h1, h2, h3 {{ color: #000; }}
+    h4 {{ color: {BRAND_GOLD}; }}
+
     </style>
     """, unsafe_allow_html=True)
 
-# --- Sidebar Corporate Links ---
+# --- Sidebar ---
 with st.sidebar:
     try:
+        # يرجى التأكد من وجود ملف logo.png في نفس المجلد
         st.image("logo.png", use_container_width=True)
     except:
-        st.markdown(f"<h2 style='color:{BRAND_GOLD}; text-align:center;'>INFINITY CDT</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h1 style='color:{BRAND_GOLD}; text-align:center;'>INFINITY CDT</h1>", unsafe_allow_html=True)
     
     st.markdown("---")
-    st.markdown("### 🌐 FOLLOW US")
+    st.markdown("### 🌐 Quick Links")
     st.markdown(f"""
-        <a href="https://www.facebook.com/InfinityCDT" style="color:#888; text-decoration:none; display:block; margin:10px 0;">Facebook</a>
-        <a href="https://www.instagram.com/InfinityCDT" style="color:#888; text-decoration:none; display:block; margin:10px 0;">Instagram</a>
-        <a href="https://www.tiktok.com/@infinitycdt" style="color:#888; text-decoration:none; display:block; margin:10px 0;">TikTok</a>
+        <div style='display:flex; flex-direction:column; gap:10px;'>
+            <a href="https://www.facebook.com/InfinityCDT" style="color:#555; text-decoration:none;">Facebook Page</a>
+            <a href="https://www.instagram.com/InfinityCDT" style="color:#555; text-decoration:none;">Instagram Profile</a>
+        </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.markdown("### ✉️ INQUIRIES")
-    st.write(f"Email: {EMAIL_ADDRESS}")
-    st.write(f"Support: +{WHATSAPP_NUMBER}")
     
     st.markdown("---")
     st.caption("Engineering Excellence © 2026")
@@ -130,153 +130,156 @@ with st.sidebar:
 # --- Hero Banner ---
 st.markdown(f"""
     <div class="hero-section">
-        <h5 style='color:{BRAND_GOLD}; letter-spacing:8px; font-weight:300;'>INFINITY CONSTRUCTION</h5>
-        <h1 style='font-size: 4.8rem; font-weight:700; margin:5px 0;'>INTERO</h1>
-        <p style='font-size: 1.3rem; font-weight:300; opacity:0.6;'>Precision Finishing Estimator System v2.0</p>
+        <h5 style='color:{BRAND_GOLD}; letter-spacing:5px; font-weight:600;'>INFINITY CONSTRUCTION</h5>
+        <h1 style='font-size: 4rem; font-weight:800; margin:0;'>INTERO</h1>
+        <p style='font-size: 1.2rem; font-weight:400; color:#555;'>Precision Finishing Estimator System v2.1</p>
     </div>
     """, unsafe_allow_html=True)
 
-# --- Data Dictionary (Updated Prices from New Text Document) ---
+# --- Data Dictionary ---
 packages = {
-    'i-Modern': {
-        'price': 8200,
-        'target': 'First Home / Investment',
-        'specs': '✅ Elsewedy Cables | ✅ Sanchi Switches | ✅ GLC/Sipes Paints | ✅ Laser Cut Ceramics'
-    },
-    'i-Smart': {
-        'price': 10500,
-        'target': 'Tech Lovers / Families',
-        'specs': '✅ Schneider Avatar Switches | ✅ Smart Home Prep | ✅ Indian/UAE Porcelain (60x120) | ✅ Jotun Fenomastic'
-    },
-    'i-Elite': {
-        'price': 16500,
-        'target': 'Villas / Luxury Apartments',
-        'specs': '✅ Legrand Switches | ✅ Grohe Built-in Tanks | ✅ Spanish Porcelain / Marble | ✅ Sound System Prep'
-    },
-    'i-Signature': {
-        'price': 28000,
-        'target': 'Penthouses / VIP Palaces',
-        'specs': '✅ Full Automation (KNX/Control4) | ✅ Book-match Marble | ✅ Engineered Wood | ✅ Custom Bespoke Designs'
-    }
+    'i-Modern': {'price': 8200, 'target': 'First Home', 'specs': 'Elsewedy | Sanchi | GLC/Sipes | Laser Cut Ceramics'},
+    'i-Smart': {'price': 10500, 'target': 'Tech Families', 'specs': 'Schneider Avatar | Smart Prep | Porcelain 60x120 | Jotun'},
+    'i-Elite': {'price': 16500, 'target': 'Luxury Apts', 'specs': 'Legrand | Grohe Built-in | Spanish Porcelain | Sound System'},
+    'i-Signature': {'price': 28000, 'target': 'VIP Palaces', 'specs': 'KNX Automation | Book-match Marble | Engineered Wood'}
 }
 
-# --- Main Calculator Form ---
+# --- Floor Options (Professional Naming) ---
+floor_options = [
+    "Ground Floor + Garden (أرضي بحديقة)",
+    "Raised Ground Floor (أرضي مرتفع)",
+    "First Floor (دور أول)",
+    "Typical Floor (دور متكرر)",
+    "Last Floor (دور أخير)",
+    "Roof / Penthouse (رووف)"
+]
+
+# --- Main Form ---
 st.markdown('<div class="glass-card">', unsafe_allow_html=True)
 
-# Client Details
-st.markdown(f"<h4 style='color:{BRAND_GOLD}; margin-bottom: 20px;'>1. بيانات العميل (Client Details)</h4>", unsafe_allow_html=True)
+# 1. Client Details
+st.markdown(f"<h4>1. بيانات العميل (Client Details)</h4>", unsafe_allow_html=True)
 col1, col2 = st.columns(2)
 with col1:
-    name = st.text_input("الاسم (Name)", placeholder="Full Name")
+    name = st.text_input("الاسم (Full Name)")
 with col2:
-    phone = st.text_input("رقم الهاتف (WhatsApp)", placeholder="01xxxxxxxxx")
+    phone = st.text_input("رقم الهاتف (Mobile / WhatsApp)")
 
 st.markdown("---")
 
-# Unit Details
-st.markdown(f"<h4 style='color:{BRAND_GOLD}; margin-bottom: 20px;'>2. تفاصيل الوحدة (Unit Specs)</h4>", unsafe_allow_html=True)
-c1, c2, c3 = st.columns(3)
+# 2. Unit Specs (Updated with Floor)
+st.markdown(f"<h4>2. مواصفات الوحدة (Unit Specs)</h4>", unsafe_allow_html=True)
+c1, c2 = st.columns(2)
 with c1:
-    area = st.number_input("المساحة (SQM)", min_value=50, value=120, step=10)
+    area = st.number_input("المساحة (Area SQM)", min_value=50, value=120, step=5)
+    rooms = st.number_input("عدد الغرف (Rooms)", min_value=1, value=3)
 with c2:
-    rooms = st.number_input("عدد الغرف (Rooms)", min_value=1, value=3, step=1)
-with c3:
-    baths = st.number_input("عدد الحمامات (Baths)", min_value=1, value=2, step=1)
+    floor_level = st.selectbox("الدور السكني (Floor Level)", floor_options, index=3)
+    baths = st.number_input("عدد الحمامات (Baths)", min_value=1, value=2)
 
 st.markdown("---")
 
-# Package Selection
-st.markdown(f"<h4 style='color:{BRAND_GOLD}; margin-bottom: 20px;'>3. باقة التشطيب (Finishing Package)</h4>", unsafe_allow_html=True)
-selected_p = st.selectbox("اختر الباقة المناسبة", list(packages.keys()), index=1) # Default to i-Smart
+# 3. Package
+st.markdown(f"<h4>3. باقة التشطيب (Package)</h4>", unsafe_allow_html=True)
+selected_p = st.selectbox("Choose Package", list(packages.keys()), index=1)
 
 st.markdown(f"""
     <div class="specs-box">
-        <strong style="color:{BRAND_GOLD}; text-transform:uppercase; font-size:1.1rem;">{selected_p} Package Includes</strong><br>
-        <span style="font-size:0.9rem; opacity:0.9;">{packages[selected_p]['specs']}</span><br>
-        <small style="opacity:0.6;">Target: {packages[selected_p]['target']}</small>
-        <br><br>
-        <strong style="color:#fff;">سعر المتر: {packages[selected_p]['price']:,} ج.م</strong>
+        <strong style="color:{BRAND_GOLD}; font-size:1.2rem;">{selected_p}</strong>
+        <p style="margin:5px 0;">{packages[selected_p]['specs']}</p>
+        <hr style="border-top:1px dashed #ccc;">
+        <strong>Price/SQM: {packages[selected_p]['price']:,} EGP</strong>
     </div>
 """, unsafe_allow_html=True)
 
-# Add-ons Section (From Logic)
-st.markdown(f"<h4 style='color:{BRAND_GOLD}; margin-bottom: 20px;'>4. إضافات حسب الطلب (Add-ons)</h4>", unsafe_allow_html=True)
+# 4. Add-ons
+st.markdown(f"<h4>4. الإضافات (Optional Add-ons)</h4>", unsafe_allow_html=True)
 ac1, ac2 = st.columns(2)
 with ac1:
-    add_kitchen = st.checkbox(f"مطبخ بولي لاك (Polylic) - {KITCHEN_COST:,} EGP")
-    st.caption("تصميم وتنفيذ جود وود + مفصلات Soft Close (متوسط 5 متر طولي)")
+    add_kitchen = st.checkbox(f"Smart Kitchen ({KITCHEN_COST:,} EGP)")
 with ac2:
-    add_furniture = st.checkbox(f"باقة الفرش الكاملة - {FURNITURE_COST:,} EGP")
-    st.caption("أخشاب (ماستر + أطفال + ريسبشن + سفرة)")
+    add_furniture = st.checkbox(f"Full Furniture ({FURNITURE_COST:,} EGP)")
 
-calculate_btn = st.button("احسب التكلفة التقديرية (GENERATE ESTIMATE) 🚀")
+# Calculate Button
+st.markdown("<br>", unsafe_allow_html=True)
+calculate_btn = st.button("عرض عرض السعر (Generate Estimate)")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Results Rendering ---
+# --- Results Section ---
 if calculate_btn:
     if not name or not phone:
-        st.error("⚠️ يرجى إدخال الاسم ورقم الهاتف لإظهار التقرير.")
+        st.warning("⚠️ يرجى استكمال البيانات الأساسية (الاسم ورقم الهاتف)")
     else:
-        st.balloons()
-        
-        # --- Logic Implementation ---
-        # 1. Base Cost
+        # Logic
         base_cost = area * packages[selected_p]['price']
-        
-        # 2. Add-ons
         kitchen_price = KITCHEN_COST if add_kitchen else 0
         furniture_price = FURNITURE_COST if add_furniture else 0
-        
-        # 3. Extra Bathrooms Logic (If baths > 2, add 45,000 per extra bath)
-        extra_baths_count = max(0, baths - 2)
-        extra_baths_price = extra_baths_count * EXTRA_BATH_COST
-        
-        # 4. Total
-        total_investment = base_cost + kitchen_price + furniture_price + extra_baths_price
-        
-        # Display
+        extra_baths = max(0, baths - 2) * EXTRA_BATH_COST
+        total = base_cost + kitchen_price + furniture_price + extra_baths
+
+        st.markdown("---")
         st.markdown(f"""
-            <div style='text-align:center; padding: 40px 0;'>
-                <h3 style='color:{BRAND_GOLD}; font-weight:300; letter-spacing:2px;'>إجمالي الاستثمار التقديري</h3>
-                <h1 style='font-size: 5rem; margin:0;'>{total_investment:,} <small style='font-size:1.2rem; opacity:0.4;'>EGP</small></h1>
-                <p style='opacity:0.6; font-size:1.1rem;'>
-                    Based on {area}m² | {selected_p} | {rooms} Rooms | {baths} Baths
-                </p>
+            <div style='text-align:center; padding: 20px;'>
+                <h2 style='color:#555;'>Total Estimated Investment</h2>
+                <h1 style='color:{BRAND_GOLD}; font-size:4rem; margin:0;'>{total:,} <span style='font-size:1.5rem; color:#000;'>EGP</span></h1>
+                <p>Unit: {area}m² | {floor_level}</p>
             </div>
         """, unsafe_allow_html=True)
-        
-        # Logic Breakdown (Optional - visible to user)
-        with st.expander("تفاصيل الحساب (Calculation Details)"):
-            st.write(f"🔹 **Finishing Base:** {base_cost:,} EGP")
-            if add_kitchen: st.write(f"🔹 **Kitchen:** {kitchen_price:,} EGP")
-            if add_furniture: st.write(f"🔹 **Furniture:** {furniture_price:,} EGP")
-            if extra_baths_count > 0: st.write(f"🔹 **Extra Baths ({extra_baths_count}):** {extra_baths_price:,} EGP")
-        
-        # Professional WhatsApp Message Construction
-        kitchen_txt = "نعم" if add_kitchen else "لا"
-        furniture_txt = "نعم" if add_furniture else "لا"
-        
+
+        # WhatsApp Link Generation
         wa_msg = (
-            f"مرحباً Infinity CDT، أنا {name}.\n"
-            f"استفسار بخصوص باقة {selected_p} لعام 2026:\n"
-            f"- المساحة: {area}م\n"
-            f"- الغرف: {rooms} | الحمامات: {baths}\n"
-            f"- مطبخ: {kitchen_txt}\n"
-            f"- فرش: {furniture_txt}\n"
-            f"- السعر التقديري: {total_investment:,} ج.م\n"
-            f"أرجو تحديد موعد للمعاينة."
+            f"Infinity CDT Inquiry:\n"
+            f"Client: {name} ({phone})\n"
+            f"Unit: {area}m, {floor_level}\n"
+            f"Pkg: {selected_p}\n"
+            f"Total Est: {total:,} EGP"
         )
-        
-        whatsapp_url = f"https://wa.me/{WHATSAPP_NUMBER}?text={wa_msg.replace(' ', '%20').replace('\n', '%0A')}"
-        
+        encoded_msg = urllib.parse.quote(wa_msg)
+        wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_msg}"
+
         st.markdown(f"""
-            <div style='text-align:center; margin-bottom: 60px;'>
-                <a href="{whatsapp_url}" target="_blank" style="text-decoration:none;">
-                    <button style="background:#25D366; color:white; border:none; padding:22px 80px; border-radius:50px; font-weight:bold; cursor:pointer; font-size:1.3rem; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);">
-                        حجز معاينة فنية مجانية 📅
+            <div style='text-align:center; margin-bottom:40px;'>
+                <a href="{wa_link}" target="_blank">
+                    <button style="background:#25D366; color:#fff; border:none; padding:15px 50px; border-radius:30px; font-size:1.2rem; cursor:pointer;">
+                        📱 تواصل عبر واتساب للمعاينة
                     </button>
                 </a>
             </div>
         """, unsafe_allow_html=True)
 
-st.markdown(f"<p style='text-align:center; opacity:0.2; padding-bottom:40px;'>INFINITY CDT | Intero Pro v2.0 (2026 Logic)</p>", unsafe_allow_html=True)
+# --- Feedback & Complain Section ---
+st.markdown("---")
+st.markdown(f"<h3 style='text-align:center; color:#555;'>We Value Your Voice</h3>", unsafe_allow_html=True)
+
+c_feed, c_comp = st.columns(2)
+
+# Feedback Column
+with c_feed:
+    with st.expander("📝 Give Feedback (رأيك يهمنا)"):
+        with st.form("feedback_form"):
+            st.write("Rate your experience (تقييمك):")
+            # Using emojis to simulate the logo/star rating visually
+            rating_feed = st.radio("Infinity Rating:", ["💎", "💎💎", "💎💎💎", "💎💎💎💎", "💎💎💎💎💎"], index=4, horizontal=True)
+            comment_feed = st.text_area("Your Comment (تعليقك):")
+            submit_feed = st.form_submit_button("Submit Feedback")
+            
+            if submit_feed:
+                subject = f"Feedback from {name} - {rating_feed}"
+                body = f"Rating: {rating_feed}\nComment: {comment_feed}"
+                mailto_link = f"mailto:{EMAIL_ADDRESS}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+                st.markdown(f"<a href='{mailto_link}' target='_blank'>📥 اضغط هنا لإرسال الإيميل</a>", unsafe_allow_html=True)
+
+# Complaint Column
+with c_comp:
+    with st.expander("⚠️ File a Complaint (تقديم شكوى)"):
+        with st.form("complain_form"):
+            st.write("Severity (درجة الأهمية):")
+            rating_comp = st.select_slider("Select Level", options=["Low", "Medium", "High", "Critical", "Urgent"])
+            comment_comp = st.text_area("Complaint Details (تفاصيل الشكوى):")
+            submit_comp = st.form_submit_button("Submit Complaint")
+            
+            if submit_comp:
+                subject = f"COMPLAINT: {name} - Level {rating_comp}"
+                body = f"Level: {rating_comp}\nDetails: {comment_comp}\nPhone: {phone}"
+                mailto_link = f"mailto:{EMAIL_ADDRESS}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+                st.markdown(f"<a href='{mailto_link}' target='_blank'>📥 اضغط هنا لإرسال الشكوى رسمياً</a>", unsafe_allow_html=True)
