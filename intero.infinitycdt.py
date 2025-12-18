@@ -1,34 +1,38 @@
 import streamlit as st
 
-# --- 1. Page Configuration (Quotes added to icon) ---
+# --- 1. Page Configuration ---
 st.set_page_config(
     page_title="Infinity CDT | Intero System",
     page_icon="🏠",
     layout="wide"
 )
 
-# --- 2. Constants & Contact Data (Quotes added to strings) ---
+# --- 2. Branding Constants ---
 BRAND_GOLD = "#D4AF37"
-BRAND_BLACK = "#0d0d0d"
+BRAND_WHITE = "#FFFFFF"
+BRAND_GRAY = "#F8F9FA"
+TEXT_DARK = "#1A1A1A"
 WHATSAPP_NUMBER = "201062796287"
 EMAIL_ADDRESS = "connect@infinitycdt.com"
 
-# --- 3. UI Customization ---
+# --- 3. UI Customization (Luxury Light Style) ---
 st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
     
     * {{ font-family: 'Montserrat', sans-serif; }}
 
+    /* Background Setup */
     .stApp {{
-        background-color: {BRAND_BLACK};
-        color: #ffffff;
+        background-color: {BRAND_WHITE};
+        color: {TEXT_DARK};
     }}
 
+    /* Hero Section - Bright & Airy */
     .hero-section {{
-        height: 45vh;
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                    url('https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=2070');
+        height: 40vh;
+        background: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.4)), 
+                    url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=2070');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -38,46 +42,62 @@ st.markdown(f"""
         border-radius: 0 0 40px 40px;
         margin-bottom: 40px;
         text-align: center;
+        border-bottom: 1px solid #eee;
     }}
 
-    .glass-card {{
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 25px;
+    /* Elegant Content Card */
+    .main-card {{
+        background: {BRAND_WHITE};
+        border-radius: 20px;
         padding: 40px;
-        margin: -80px auto 40px auto;
-        max-width: 900px;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        margin: -60px auto 40px auto;
+        max-width: 850px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+        border: 1px solid #f0f0f0;
     }}
 
     .specs-box {{
-        background: rgba(212, 175, 55, 0.05);
-        border-left: 3px solid {BRAND_GOLD};
+        background: #fdfaf0;
+        border-left: 4px solid {BRAND_GOLD};
         padding: 20px;
-        border-radius: 12px;
-        margin: 25px 0;
+        border-radius: 8px;
+        margin: 20px 0;
     }}
 
+    /* Buttons - Luxury Gold */
     .stButton>button {{
-        background: {BRAND_GOLD} !important;
-        color: #000 !important;
-        border: none !important;
-        border-radius: 50px !important;
-        padding: 18px 50px !important;
+        background: {TEXT_DARK} !important;
+        color: {BRAND_GOLD} !important;
+        border: 2px solid {BRAND_GOLD} !important;
+        border-radius: 8px !important;
+        padding: 15px 40px !important;
         font-weight: 700 !important;
-        font-size: 1.1rem !important;
-        letter-spacing: 1.5px;
-        transition: 0.4s all ease;
+        font-size: 1rem !important;
+        letter-spacing: 1px;
+        transition: 0.3s all ease;
         width: 100%;
-        margin-top: 20px;
+        margin-top: 10px;
+    }}
+    .stButton>button:hover {{
+        background: {BRAND_GOLD} !important;
+        color: {TEXT_DARK} !important;
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
     }}
 
+    /* Input Fields Style */
     input, select, .stSelectbox div {{
-        background-color: #1a1a1a !important;
-        color: white !important;
-        border: 1px solid #333 !important;
-        border-radius: 12px !important;
+        background-color: {BRAND_GRAY} !important;
+        color: {TEXT_DARK} !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 8px !important;
+    }}
+
+    /* Results Styling */
+    .result-value {{
+        color: {BRAND_GOLD};
+        font-weight: 700;
+        font-size: 4.5rem;
+        margin: 0;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -87,21 +107,21 @@ with st.sidebar:
     try:
         st.image("logo.png", use_container_width=True)
     except:
-        st.markdown(f"<h2 style='color:{BRAND_GOLD}; text-align:center;'>INFINITY CDT</h2>", unsafe_allow_html=True)
+        st.markdown(f"<h2 style='color:{TEXT_DARK}; text-align:center;'>INFINITY CDT</h2>", unsafe_allow_html=True)
     
     st.markdown("---")
-    st.markdown("### 🌐 FOLLOW US")
+    st.markdown("### 🌐 SOCIAL MEDIA")
     st.markdown(f"""
-        <a href="https://www.facebook.com/InfinityCDT" target="_blank" style="color:#888; text-decoration:none; display:block; margin:10px 0;">Facebook</a>
-        <a href="https://www.instagram.com/InfinityCDT" target="_blank" style="color:#888; text-decoration:none; display:block; margin:10px 0;">Instagram</a>
-        <a href="https://www.tiktok.com/@infinitycdt" target="_blank" style="color:#888; text-decoration:none; display:block; margin:10px 0;">TikTok</a>
-        <a href="https://www.threads.com/@infinitycdt" target="_blank" style="color:#888; text-decoration:none; display:block; margin:10px 0;">Threads</a>
+        <a href="https://www.facebook.com/InfinityCDT" target="_blank" style="color:#666; text-decoration:none; display:block; margin:8px 0;">Facebook</a>
+        <a href="https://www.instagram.com/InfinityCDT" target="_blank" style="color:#666; text-decoration:none; display:block; margin:8px 0;">Instagram</a>
+        <a href="https://www.tiktok.com/@infinitycdt" target="_blank" style="color:#666; text-decoration:none; display:block; margin:8px 0;">TikTok</a>
+        <a href="https://www.threads.com/@infinitycdt" target="_blank" style="color:#666; text-decoration:none; display:block; margin:8px 0;">Threads</a>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
-    st.markdown("### ✉️ INQUIRIES")
+    st.markdown("### ✉️ CONTACT")
     st.write(f"Email: {EMAIL_ADDRESS}")
-    st.write(f"Support: +{WHATSAPP_NUMBER}")
+    st.write(f"WhatsApp: +{WHATSAPP_NUMBER}")
     
     st.markdown("---")
     st.caption("Engineering Excellence © 2025")
@@ -109,88 +129,86 @@ with st.sidebar:
 # --- 5. Hero Banner ---
 st.markdown(f"""
     <div class="hero-section">
-        <h5 style='color:{BRAND_GOLD}; letter-spacing:8px; font-weight:300;'>INFINITY CONSTRUCTION</h5>
-        <h1 style='font-size: 4.8rem; font-weight:700; margin:5px 0;'>INTERO</h1>
-        <p style='font-size: 1.3rem; font-weight:300; opacity:0.6;'>Precision Finishing Estimator System</p>
+        <h5 style='color:{BRAND_GOLD}; letter-spacing:6px; font-weight:600;'>Infinity Construction and Decorations</h5>
+        <h1 style='font-size: 4rem; font-weight:700; margin:5px 0; color:{TEXT_DARK};'>INTERO</h1>
+        <p style='font-size: 1.1rem; color:#555;'>Your Gateway to Precision Interior Finishing</p>
     </div>
     """, unsafe_allow_html=True)
 
-# --- 6. Data Dictionary (Corrected Dictionary Syntax) ---
-packages = {
-    "i-Modern": {
-        "range": (5000, 5600),
+# --- 6. Data (Your Real Packages) ---
+packages = {{
+    "i-Modern": {{
+        "price": (5000, 5600),
         "target": "First Home / Investment",
         "specs": "✅ Elsewedy Cables | ✅ Sanchi Switches | ✅ GLC/Sipes Paints | ✅ Laser Cut Ceramics"
-    },
-    "i-Smart": {
-        "range": (5900, 6800),
+    }},
+    "i-Smart": {{
+        "price": (5900, 6800),
         "target": "Tech Lovers / Families",
-        "specs": "✅ Schneider Avatar Switches | ✅ Smart Home Prep | ✅ Indian/UAE Porcelain (60x120) | ✅ Jotun Fenomastic"
-    },
-    "i-Elite": {
-        "range": (7100, 9000),
-        "target": "Villas / Luxury Apartments",
+        "specs": "✅ Schneider Avatar Switches | ✅ Smart Home Prep | ✅ Indian/UAE Porcelain | ✅ Jotun Fenomastic"
+    }},
+    "i-Elite": {{
+        "price": (7100, 9000),
+        "target": "Luxury Apartments / Villas",
         "specs": "✅ Legrand Switches | ✅ Grohe Built-in Tanks | ✅ Spanish Porcelain / Marble | ✅ Sound System Prep"
-    },
-    "i-Signature": {
-        "range": (12000, 15000),
-        "target": "Penthouses / VIP Palaces",
-        "specs": "✅ Full Automation (KNX/Control4) | ✅ Book-match Marble | ✅ Engineered Wood | ✅ Custom Bespoke Designs"
-    }
-}
+    }},
+    "i-Signature": {{
+        "price": (12000, 15000),
+        "target": "VIP Penthouses / Palaces",
+        "specs": "✅ Full Automation (KNX/Control4) | ✅ Book-match Marble | ✅ Engineered Wood | ✅ Custom Designs"
+    }}
+}}
 
-# --- 7. Form ---
-st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+# --- 7. Main Calculator ---
+st.markdown('<div class="main-card">', unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 with col1:
-    name = st.text_input("YOUR NAME", placeholder="Full Name")
+    name = st.text_input("NAME", placeholder="Full Name")
 with col2:
-    phone = st.text_input("WHATSAPP", placeholder="01xxxxxxxxx")
+    phone = st.text_input("PHONE", placeholder="01xxxxxxxxx")
 
-area = st.number_input("UNIT AREA (SQM)", min_value=50, value=120, step=10)
-selected_p = st.selectbox("CHOOSE FINISHING PACKAGE", list(packages.keys()))
+area = st.number_input("AREA (SQM)", min_value=50, value=120, step=10)
+selected_p = st.selectbox("PACKAGE", list(packages.keys()))
 
 st.markdown(f"""
     <div class="specs-box">
-        <strong style="color:{BRAND_GOLD}; text-transform:uppercase; font-size:0.8rem;">{selected_p} Package Includes:</strong><br>
-        <span style="font-size:0.9rem; opacity:0.8;">{packages[selected_p]['specs']}</span><br>
-        <small style="opacity:0.5;">Target: {packages[selected_p]['target']}</small>
+        <strong style="color:{TEXT_DARK}; font-size:0.8rem;">{selected_p} DETAILS:</strong><br>
+        <span style="font-size:0.9rem; color:#444;">{packages[selected_p]['specs']}</span>
     </div>
 """, unsafe_allow_html=True)
 
-calculate_btn = st.button("GENERATE ESTIMATE 🚀")
+calculate_btn = st.button("CALCULATE INVESTMENT 🚀")
 st.markdown('</div>', unsafe_allow_html=True)
 
 # --- 8. Results ---
 if calculate_btn:
     if not name or not phone:
-        st.error("Please provide your name and phone to generate the report.")
+        st.error("Please provide your contact details.")
     else:
         st.balloons()
-        min_p = area * packages[selected_p]['range'][0]
-        max_p = area * packages[selected_p]['range'][1]
-        avg_p = (min_p + max_p) / 2
+        p_data = packages[selected_p]
+        avg_p = (area * p_data['price'][0] + area * p_data['price'][1]) / 2
         
         st.markdown(f"""
-            <div style='text-align:center; padding: 40px 0;'>
-                <h3 style='color:{BRAND_GOLD}; font-weight:300; letter-spacing:2px;'>ESTIMATED INVESTMENT</h3>
-                <h1 style='font-size: 6rem; margin:0;'>{int(avg_p):,} <small style='font-size:1.2rem; opacity:0.4;'>EGP</small></h1>
-                <p style='opacity:0.6; font-size:1.1rem;'>Estimate for {area} sqm under the {selected_p} package.</p>
+            <div style='text-align:center; padding: 20px 0;'>
+                <h3 style='color:#666; font-weight:400;'>ESTIMATED INVESTMENT</h3>
+                <h1 class="result-value">{int(avg_p):,} <small style='font-size:1.2rem; color:#999;'>EGP</small></h1>
+                <p style='color:#777;'>Estimate for {area} sqm under {selected_p} package.</p>
             </div>
         """, unsafe_allow_html=True)
         
-        wa_msg = f"Hello Infinity CDT, I'm {name}. I've generated a quote for the {selected_p} package for my {area}sqm unit. Let's discuss the next steps."
+        wa_msg = f"Hello Infinity CDT, I am {name}. I generated a quote for {selected_p} package ({area} sqm). Please contact me."
         whatsapp_url = f"https://wa.me/{WHATSAPP_NUMBER}?text={wa_msg.replace(' ', '%20')}"
         
         st.markdown(f"""
-            <div style='text-align:center; margin-bottom: 60px;'>
+            <div style='text-align:center; margin-bottom: 40px;'>
                 <a href="{whatsapp_url}" target="_blank" style="text-decoration:none;">
-                    <button style="background:#25D366; color:white; border:none; padding:22px 80px; border-radius:50px; font-weight:bold; cursor:pointer; font-size:1.3rem; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);">
-                        START YOUR CONSULTATION 💬
+                    <button style="background:#25D366; color:white; border:none; padding:18px 60px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:1.1rem; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.1);">
+                        SEND TO WHATSAPP 💬
                     </button>
                 </a>
             </div>
         """, unsafe_allow_html=True)
 
-st.markdown("<p style='text-align:center; opacity:0.2; padding-bottom:40px;'>INFINITY CDT | Intero Pro v3.0</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; opacity:0.3; padding-bottom:30px;'>INFINITY CDT | Intero System v3.2</p>", unsafe_allow_html=True)
