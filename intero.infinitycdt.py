@@ -7,7 +7,7 @@ WHATSAPP_NUMBER = "201062796287" # Updated Number
 EMAIL_ADDRESS = "info@infinitycdt.com"
 
 st.set_page_config(
-    page_title="Infinity CDT | Intero Calculator",
+    page_title="Infinity CDT | Intero Desgin Calculator System",
     page_icon="🏠",
     layout="centered"
 )
@@ -57,7 +57,7 @@ with st.sidebar:
     
     st.markdown("---")
     st.markdown("### 📞 CONTACT US")
-    st.markdown(f"**Email:** {EMAIL_ADDRESS}")
+    st.markdown(f"**Email:** connect@infinitycdt.com")
     st.markdown(f"**WhatsApp:** +20 106 279 6287")
     
     st.markdown("---")
@@ -152,3 +152,4 @@ if calculate_btn:
         """, unsafe_allow_html=True)
 
 st.markdown("<br><p style='text-align:center; color:#888;'>Infinity CDT | Your Path to Engineering Excellence</p>", unsafe_allow_html=True)
+
