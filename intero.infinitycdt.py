@@ -1,285 +1,370 @@
 import streamlit as st
 import urllib.parse
 
-# --- Page Configuration ---
+# ================== 1) Page Config ==================
 st.set_page_config(
-    page_title="Infinity CDT | Intero System",
+    page_title="Infinity CDT | Finishing System",
     page_icon="🏗️",
     layout="wide"
 )
 
-# --- Constants & Contact Data ---
-BRAND_GOLD = "#D4AF37"
-BRAND_BLACK = "#0d0d0d"  # Used for contrast elements
-BRAND_WHITE = "#ffffff"
-TEXT_COLOR = "#333333"
+# ================== 2) Constants & Branding ==================
+BRAND_GOLD  = "#D4AF37"
+BRAND_BLACK = "#0D0D0D"
+BRAND_WHITE = "#FFFFFF"
+TEXT_COLOR  = "#333333"
+
 WHATSAPP_NUMBER = "201062796287"
-EMAIL_ADDRESS = "connect@infinitycdt.com"
+EMAIL_ADDRESS   = "connect@infinitycdt.com"
 
-# --- Logic Constants ---
-KITCHEN_COST = 72500   # 14500 * 5
-FURNITURE_COST = 360500
-EXTRA_BATH_COST = 45000
+BASE_AREA = 100  # الأرقام المرجعية للباقات في الإكسل تقريباً على 100 م² [file:6]
 
-# --- UI Customization (Light Professional Theme) ---
-st.markdown(f"""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-    
-    * {{ font-family: 'Cairo', 'Montserrat', sans-serif; }}
+# ================== 3) Language Dictionary ==================
+STRINGS = {
+    "ar": {
+        "app_title": "نظام تسعير التشطيب - Infinity CDT",
+        "hero_title": "احسب متوسط تكلفة تشطيب شقتك في ثواني",
+        "hero_sub": "اختر الباقة والمساحة وبعض الخيارات الإضافية لتحصل على متوسط سعر شامل مع تفاصيل واضحة.",
+        "project_info": "بيانات المشروع",
+        "area_label": "مساحة الوحدة (م²)",
+        "floor_label": "مستوى الجودة التشطيبية",
+        "pkg_label": "اختر الباقة الأساسية",
+        "options_title": "الإضافات الاختيارية",
+        "kitchen_opt": "مطبخ كامل",
+        "furniture_opt": "فرش أساسي",
+        "smart_opt": "نظام Smart Home",
+        "landscape_opt": "لاندسكيب / بلكونة",
+        "result_title": "نتيجة التسعير",
+        "result_sub": "هذه الأرقام تقديرية لمساعدتك على فهم متوسط تكلفة الاستثمار في التشطيب.",
+        "min_price": "الحد الأدنى التقريبي",
+        "avg_price": "المتوسط المرجّح",
+        "max_price": "الحد الأعلى التقريبي",
+        "per_m2": "سعر المتر التقريبي",
+        "included_heading": "ماذا يشمل هذا السعر؟",
+        "compare_tab": "مقارنة الباقات",
+        "details_tab": "تفاصيل البنود",
+        "cta_title": "عايز عرض سعر أدق لمشروعك؟",
+        "cta_button": "تواصل معنا على واتساب",
+        "core_items_title": "✅ البنود الأساسية المشمولة",
+        "optional_items_title": "✨ الإضافات الممكنة",
+        "compare_intro": "ملخص مبسط لأهم الفروقات بين الباقات الأربع.",
 
-    /* Main Background - White */
-    .stApp {{
-        background-color: {BRAND_WHITE};
-        color: {TEXT_COLOR};
-    }}
+        "pkg_modern": "Modern (الحداثة)",
+        "pkg_smart": "Smart (الذكاء)",
+        "pkg_elite": "Elite (النخبة)",
+        "pkg_signature": "Signature (البصمة)",
+        "pkg_economic": "اقتصادية",
+        "pkg_mid": "متوسطة",
+        "pkg_lux": "فاخرة",
+        "pkg_hotel": "فندقية",
 
-    /* Hero Section */
-    .hero-section {{
-        height: 40vh;
-        background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.7)), 
-                    url('https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&q=80&w=2000');
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border-bottom: 5px solid {BRAND_GOLD};
-        margin-bottom: 40px;
-        text-align: center;
-        color: #000;
-    }}
+        "col_design": "التصاميم والإشراف",
+        "col_plumbing": "السباكة",
+        "col_electric": "الكهرباء",
+        "col_floor": "أرضيات الاستقبال",
+        "col_bed": "أرضيات غرف النوم",
+        "col_paint": "الدهانات",
+        "col_smart": "السمارت هوم",
+        "col_warranty": "الضمان",
 
-    /* Cards Styling (Light Theme) */
-    .glass-card {{
-        background: #F8F9FA;
-        border: 1px solid #E9ECEF;
-        border-radius: 20px;
-        padding: 40px;
-        margin: -60px auto 40px auto;
-        max-width: 1000px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-        position: relative;
-    }}
+    },
+    "en": {
+        "app_title": "Finishing Pricing System - Infinity CDT",
+        "hero_title": "Estimate Your Apartment Finishing Cost in Seconds",
+        "hero_sub": "Choose package, area and options to get a realistic average price with clear details.",
+        "project_info": "Project Information",
+        "area_label": "Unit Area (m²)",
+        "floor_label": "Finishing Quality Level",
+        "pkg_label": "Choose Main Package",
+        "options_title": "Optional Add-ons",
+        "kitchen_opt": "Full Kitchen",
+        "furniture_opt": "Basic Furniture",
+        "smart_opt": "Smart Home System",
+        "landscape_opt": "Landscape / Balcony",
+        "result_title": "Pricing Result",
+        "result_sub": "Values are indicative to help you understand the investment level.",
+        "min_price": "Estimated Minimum",
+        "avg_price": "Weighted Average",
+        "max_price": "Estimated Maximum",
+        "per_m2": "Approx. price per m²",
+        "included_heading": "What is included in this price?",
+        "compare_tab": "Packages Comparison",
+        "details_tab": "Scope Details",
+        "cta_title": "Want a more accurate quotation?",
+        "cta_button": "Contact us on WhatsApp",
+        "core_items_title": "✅ Included Core Items",
+        "optional_items_title": "✨ Possible Upgrades",
+        "compare_intro": "A simplified summary of the main differences between the four packages.",
 
-    .specs-box {{
-        background: #FFFBF0; /* Light Gold Tint */
-        border-right: 4px solid {BRAND_GOLD};
-        padding: 20px;
-        border-radius: 8px;
-        margin: 25px 0;
-        text-align: right;
-        color: #444;
-    }}
+        "pkg_modern": "Modern",
+        "pkg_smart": "Smart",
+        "pkg_elite": "Elite",
+        "pkg_signature": "Signature",
+        "pkg_economic": "Economic",
+        "pkg_mid": "Mid-range",
+        "pkg_lux": "Luxury",
+        "pkg_hotel": "Hotel-grade",
 
-    /* Inputs Styling */
-    .stTextInput input, .stNumberInput input, .stSelectbox div, .stTextArea textarea {{
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-        border: 1px solid #DDDDDD !important;
-        border-radius: 8px !important;
-    }}
-    
-    /* Buttons */
-    .stButton>button {{
-        background: {BRAND_GOLD} !important;
-        color: #FFFFFF !important;
-        border: none !important;
-        border-radius: 50px !important;
-        padding: 15px 40px !important;
-        font-weight: 700 !important;
-        font-size: 1.1rem !important;
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-        transition: 0.3s;
-        width: 100%;
-    }}
-    .stButton>button:hover {{
-        background: #b5952f !important;
-        transform: translateY(-2px);
-    }}
-
-    /* Headings */
-    h1, h2, h3 {{ color: #000; }}
-    h4 {{ color: {BRAND_GOLD}; }}
-
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- Sidebar ---
-with st.sidebar:
-    try:
-        # يرجى التأكد من وجود ملف logo.png في نفس المجلد
-        st.image("logo.png", use_container_width=True)
-    except:
-        st.markdown(f"<h1 style='color:{BRAND_GOLD}; text-align:center;'>INFINITY CDT</h1>", unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.markdown("### 🌐 Quick Links")
-    st.markdown(f"""
-        <div style='display:flex; flex-direction:column; gap:10px;'>
-            <a href="https://www.facebook.com/InfinityCDT" style="color:#555; text-decoration:none;">Facebook Page</a>
-            <a href="https://www.instagram.com/InfinityCDT" style="color:#555; text-decoration:none;">Instagram Profile</a>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.caption("Engineering Excellence © 2026")
-
-# --- Hero Banner ---
-st.markdown(f"""
-    <div class="hero-section">
-        <h5 style='color:{BRAND_GOLD}; letter-spacing:5px; font-weight:600;'>INFINITY CONSTRUCTION</h5>
-        <h1 style='font-size: 4rem; font-weight:800; margin:0;'>INTERO</h1>
-        <p style='font-size: 1.2rem; font-weight:400; color:#555;'>Precision Finishing Estimator System v2.1</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# --- Data Dictionary ---
-packages = {
-    'i-Modern': {'price': 8200, 'target': 'First Home', 'specs': 'Elsewedy | Sanchi | GLC/Sipes | Laser Cut Ceramics'},
-    'i-Smart': {'price': 10500, 'target': 'Tech Families', 'specs': 'Schneider Avatar | Smart Prep | Porcelain 60x120 | Jotun'},
-    'i-Elite': {'price': 16500, 'target': 'Luxury Apts', 'specs': 'Legrand | Grohe Built-in | Spanish Porcelain | Sound System'},
-    'i-Signature': {'price': 28000, 'target': 'VIP Palaces', 'specs': 'KNX Automation | Book-match Marble | Engineered Wood'}
+        "col_design": "Design & Supervision",
+        "col_plumbing": "Plumbing",
+        "col_electric": "Electrical",
+        "col_floor": "Reception Flooring",
+        "col_bed": "Bedroom Flooring",
+        "col_paint": "Paints",
+        "col_smart": "Smart Home",
+        "col_warranty": "Warranty",
+    }
 }
 
-# --- Floor Options (Professional Naming) ---
-floor_options = [
-    "Ground Floor + Garden (أرضي بحديقة)",
-    "Raised Ground Floor (أرضي مرتفع)",
-    "First Floor (دور أول)",
-    "Typical Floor (دور متكرر)",
-    "Last Floor (دور أخير)",
-    "Roof / Penthouse (رووف)"
-]
+# ================== 4) Package Data (من الإكسل) ==================
+PACKAGES = {
+    # الإجماليات من Sheet "ملخص الأسعار" [file:6]
+    "Modern": {
+        "total": 503000,
+        "tag_ar": "🟢 اقتصادية",
+        "tag_en": "🟢 Economic",
+    },
+    "Smart": {
+        "total": 716350,
+        "tag_ar": "🔵 متوسطة",
+        "tag_en": "🔵 Mid-range",
+    },
+    "Elite": {
+        "total": 1048750,
+        "tag_ar": "🟡 فاخرة",
+        "tag_en": "🟡 Luxury",
+    },
+    "Signature": {
+        "total": 1624000,
+        "tag_ar": "🔴 فندقية",
+        "tag_en": "🔴 Hotel-grade",
+    },
+}
 
-# --- Main Form ---
-st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-
-# 1. Client Details
-st.markdown(f"<h4>1. بيانات العميل (Client Details)</h4>", unsafe_allow_html=True)
-col1, col2 = st.columns(2)
-with col1:
-    name = st.text_input("الاسم (Full Name)")
-with col2:
-    phone = st.text_input("رقم الهاتف (Mobile / WhatsApp)")
-
-st.markdown("---")
-
-# 2. Unit Specs (Updated with Floor)
-st.markdown(f"<h4>2. مواصفات الوحدة (Unit Specs)</h4>", unsafe_allow_html=True)
-c1, c2 = st.columns(2)
-with c1:
-    area = st.number_input("المساحة (Area SQM)", min_value=50, value=120, step=5)
-    rooms = st.number_input("عدد الغرف (Rooms)", min_value=1, value=3)
-with c2:
-    floor_level = st.selectbox("الدور السكني (Floor Level)", floor_options, index=3)
-    baths = st.number_input("عدد الحمامات (Baths)", min_value=1, value=2)
-
-st.markdown("---")
-
-# 3. Package
-st.markdown(f"<h4>3. باقة التشطيب (Package)</h4>", unsafe_allow_html=True)
-selected_p = st.selectbox("Choose Package", list(packages.keys()), index=1)
-
+# ================== 5) Global CSS ==================
 st.markdown(f"""
-    <div class="specs-box">
-        <strong style="color:{BRAND_GOLD}; font-size:1.2rem;">{selected_p}</strong>
-        <p style="margin:5px 0;">{packages[selected_p]['specs']}</p>
-        <hr style="border-top:1px dashed #ccc;">
-        <strong>Price/SQM: {packages[selected_p]['price']:,} EGP</strong>
-    </div>
+<style>
+    html, body, .stApp {{
+        background-color: #F5F5F5;
+        color: {TEXT_COLOR};
+        font-family: "Segoe UI", "Cairo", sans-serif;
+    }}
+    .main-block {{
+        background-color: #FFFFFF;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        margin-bottom: 1rem;
+    }}
+    .price-number {{
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: {BRAND_GOLD};
+    }}
+    .pkg-tag {{
+        font-size: 0.85rem;
+        color: #666666;
+    }}
+    @media (max-width: 768px) {{
+        .main-block {{
+            padding: 1rem;
+        }}
+    }}
+</style>
 """, unsafe_allow_html=True)
 
-# 4. Add-ons
-st.markdown(f"<h4>4. الإضافات (Optional Add-ons)</h4>", unsafe_allow_html=True)
-ac1, ac2 = st.columns(2)
-with ac1:
-    add_kitchen = st.checkbox(f"Smart Kitchen ({KITCHEN_COST:,} EGP)")
-with ac2:
-    add_furniture = st.checkbox(f"Full Furniture ({FURNITURE_COST:,} EGP)")
+# ================== 6) Sidebar: Language & Branding ==================
+with st.sidebar:
+    lang_choice = st.radio("Language / اللغة", ["العربية", "English"])
+    lang = "ar" if lang_choice == "العربية" else "en"
+    t = STRINGS[lang]
 
-# Calculate Button
+    st.markdown(f"### {t['app_title']}")
+    st.markdown("---")
+    st.markdown("**Infinity CDT**")
+    st.caption("Precision Finishing Estimator v2.1")
+
+# ================== 7) Hero Section ==================
+st.markdown(
+    f"<h2 style='text-align:center;'>{t['hero_title']}</h2>",
+    unsafe_allow_html=True
+)
+st.markdown(
+    f"<p style='text-align:center; color:#666;'>{t['hero_sub']}</p>",
+    unsafe_allow_html=True
+)
 st.markdown("<br>", unsafe_allow_html=True)
-calculate_btn = st.button("عرض عرض السعر (Generate Estimate)")
-st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Results Section ---
-if calculate_btn:
-    if not name or not phone:
-        st.warning("⚠️ يرجى استكمال البيانات الأساسية (الاسم ورقم الهاتف)")
-    else:
-        # Logic
-        base_cost = area * packages[selected_p]['price']
-        kitchen_price = KITCHEN_COST if add_kitchen else 0
-        furniture_price = FURNITURE_COST if add_furniture else 0
-        extra_baths = max(0, baths - 2) * EXTRA_BATH_COST
-        total = base_cost + kitchen_price + furniture_price + extra_baths
+# ================== 8) Layout: Inputs (Left) / Results (Right) ==================
+col_left, col_right = st.columns([1.1, 1])
 
-        st.markdown("---")
-        st.markdown(f"""
-            <div style='text-align:center; padding: 20px;'>
-                <h2 style='color:#555;'>Total Estimated Investment</h2>
-                <h1 style='color:{BRAND_GOLD}; font-size:4rem; margin:0;'>{total:,} <span style='font-size:1.5rem; color:#000;'>EGP</span></h1>
-                <p>Unit: {area}m² | {floor_level}</p>
-            </div>
-        """, unsafe_allow_html=True)
+with col_left:
+    st.markdown(f"<div class='main-block'><h4>{t['project_info']}</h4>", unsafe_allow_html=True)
 
-        # WhatsApp Link Generation
-        wa_msg = (
-            f"Infinity CDT Inquiry:\n"
-            f"Client: {name} ({phone})\n"
-            f"Unit: {area}m, {floor_level}\n"
-            f"Pkg: {selected_p}\n"
-            f"Total Est: {total:,} EGP"
+    area = st.number_input(
+        t["area_label"],
+        min_value=40,
+        max_value=400,
+        value=100,
+        step=5
+    )
+
+    finishing_level = st.selectbox(
+        t["floor_label"],
+        ["Standard", "High", "Premium"],
+        index=1
+    )
+
+    pkg_name = st.selectbox(
+        t["pkg_label"],
+        list(PACKAGES.keys())
+    )
+
+    st.markdown("---")
+    st.markdown(f"#### {t['options_title']}")
+
+    opt_kitchen   = st.checkbox(t["kitchen_opt"])
+    opt_furniture = st.checkbox(t["furniture_opt"])
+    opt_smart     = st.checkbox(t["smart_opt"])
+    opt_land      = st.checkbox(t["landscape_opt"])
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# ================== 9) Pricing Logic (مبسّط لكن واقعي) ==================
+base_total = PACKAGES[pkg_name]["total"]
+base_scaled = base_total * (area / BASE_AREA)  # Scaling حسب المساحة [file:6]
+
+# إضافات تقديرية من منطقك السابق [file:4]
+extras = 0
+if opt_kitchen:
+    extras += 72500      # KITCHEN_COST [file:4]
+if opt_furniture:
+    extras += 360500     # FURNITURE_COST [file:4]
+if opt_smart:
+    extras += 35000      # مستوى متوسط للسمارت
+if opt_land:
+    extras += 25000      # لاندسكيب بسيط
+
+level_factor = {
+    "Standard": 0.95,
+    "High": 1.00,
+    "Premium": 1.08,
+}[finishing_level]
+
+min_price = base_scaled * 0.9 * level_factor
+avg_price = base_scaled * level_factor + extras * 0.6
+max_price = base_scaled * 1.1 * level_factor + extras
+
+price_per_m2 = avg_price / area
+
+# ================== 10) Results with st.metric ==================
+with col_right:
+    st.markdown(f"<div class='main-block'><h4>{t['result_title']}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#777;'>{t['result_sub']}</p>", unsafe_allow_html=True)
+
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+        st.metric(
+            label=t["min_price"],
+            value=f"{min_price:,.0f} EGP"
         )
-        encoded_msg = urllib.parse.quote(wa_msg)
-        wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={encoded_msg}"
 
-        st.markdown(f"""
-            <div style='text-align:center; margin-bottom:40px;'>
-                <a href="{wa_link}" target="_blank">
-                    <button style="background:#25D366; color:#fff; border:none; padding:15px 50px; border-radius:30px; font-size:1.2rem; cursor:pointer;">
-                        📱 تواصل عبر واتساب للمعاينة
-                    </button>
-                </a>
-            </div>
-        """, unsafe_allow_html=True)
+    with c2:
+        st.metric(
+            label=t["avg_price"],
+            value=f"{avg_price:,.0f} EGP",
+            delta=f"{price_per_m2:,.0f} EGP / m²"
+        )
 
-# --- Feedback & Complain Section ---
-st.markdown("---")
-st.markdown(f"<h3 style='text-align:center; color:#555;'>We Value Your Voice</h3>", unsafe_allow_html=True)
+    with c3:
+        st.metric(
+            label=t["max_price"],
+            value=f"{max_price:,.0f} EGP"
+        )
 
-c_feed, c_comp = st.columns(2)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# Feedback Column
-with c_feed:
-    with st.expander("📝 Give Feedback (رأيك يهمنا)"):
-        with st.form("feedback_form"):
-            st.write("Rate your experience (تقييمك):")
-            # Using emojis to simulate the logo/star rating visually
-            rating_feed = st.radio("Infinity Rating:", ["💎", "💎💎", "💎💎💎", "💎💎💎💎", "💎💎💎💎💎"], index=4, horizontal=True)
-            comment_feed = st.text_area("Your Comment (تعليقك):")
-            submit_feed = st.form_submit_button("Submit Feedback")
-            
-            if submit_feed:
-                subject = f"Feedback from {name} - {rating_feed}"
-                body = f"Rating: {rating_feed}\nComment: {comment_feed}"
-                mailto_link = f"mailto:{EMAIL_ADDRESS}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
-                st.markdown(f"<a href='{mailto_link}' target='_blank'>📥 اضغط هنا لإرسال الإيميل</a>", unsafe_allow_html=True)
+# ================== 11) Tabs: Comparison & Details ==================
+tab_compare, tab_details = st.tabs([t["compare_tab"], t["details_tab"]])
 
-# Complaint Column
-with c_comp:
-    with st.expander("⚠️ File a Complaint (تقديم شكوى)"):
-        with st.form("complain_form"):
-            st.write("Severity (درجة الأهمية):")
-            rating_comp = st.select_slider("Select Level", options=["Low", "Medium", "High", "Critical", "Urgent"])
-            comment_comp = st.text_area("Complaint Details (تفاصيل الشكوى):")
-            submit_comp = st.form_submit_button("Submit Complaint")
-            
-            if submit_comp:
-                subject = f"COMPLAINT: {name} - Level {rating_comp}"
-                body = f"Level: {rating_comp}\nDetails: {comment_comp}\nPhone: {phone}"
-                mailto_link = f"mailto:{EMAIL_ADDRESS}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
-                st.markdown(f"<a href='{mailto_link}' target='_blank'>📥 اضغط هنا لإرسال الشكوى رسمياً</a>", unsafe_allow_html=True)
+with tab_compare:
+    st.markdown(f"#### {t['compare_intro']}")
+    # ملخص مبسّط لأهم الفروق، مأخوذ من جدول المقارنة في الإكسل [file:6]
+    if lang == "ar":
+        st.markdown("""
+| الميزة | Modern | Smart | Elite | Signature |
+| --- | --- | --- | --- | --- |
+| التصاميم والإشراف | تصميم وإشراف | تصميم + إشراف متقدم | 3D + مهندس مقيم | VR + إدارة كاملة |
+| السباكة | خامات BR محلية | جاهز للسمارت | Grohe دفن كامل | نظام فندقي كامل |
+| الكهرباء | سويدي أصلي معياري | تجهيز للسمارت | أحمال عالية | Schneider كامل |
+| أرضيات الاستقبال | سيراميك فرز أول | سيراميك بقطع ليزر | بورسلين 60x60 | بورسلين إسباني فاخر |
+| السمارت هوم | غير مشمول | إنارة ذكية | إنارة + تكييف | تحكم كامل (صوت+ستائر) |
+| الدهانات | بلاستيك مط | نصف لامع | قطيفة/سواحيلي | ديكورية خاصة |
+| الضمان | 5 سنوات | 7 سنوات | 10 سنوات | مدى الحياة |
+""")
+    else:
+        st.markdown("""
+| Feature | Modern | Smart | Elite | Signature |
+| --- | --- | --- | --- | --- |
+| Design & Supervision | Design + Basic Supervision | Detailed Drawings | 3D + Site Engineer | VR + Full Management |
+| Plumbing | Local BR Materials | Smart-ready | Grohe Concealed | Full Hotel-grade System |
+| Electrical | Original Swedish | Smart-ready | High Loads | Full Schneider System |
+| Reception Flooring | First-grade Ceramic | Laser-cut Ceramic | 60x60 Porcelain | Spanish Porcelain |
+| Smart Home | Not Included | Smart Lighting | Lighting + AC | Full Control (Voice + Curtains) |
+| Paints | Matt | Semi-gloss | Special Effects | Decorative Paints |
+| Warranty | 5 Years | 7 Years | 10 Years | Lifetime |
+""")
+
+with tab_details:
+    st.markdown(f"### {t['included_heading']}")
+
+    with st.expander(t["core_items_title"], expanded=True):
+        if lang == "ar":
+            st.markdown("- سباكة كاملة (حمامين + مطبخ) حسب الباقة.")
+            st.markdown("- تأسيس كهرباء كامل + لوحة وقواطع وحمايات.")
+            st.markdown("- محارة، جبس، وأسقف معلقة حسب التصميم.")
+            st.markdown("- أرضيات (سيراميك / بورسلين / HDF / خشب هندسي).")
+            st.markdown("- دهانات داخلية (Jotun / GLC) حسب المستوى.")
+            st.markdown("- تأسيس مواسير تكييف فريون.")
+            st.markdown("- أبواب داخلية + باب مصفح رئيسي.")
+            st.markdown("- شبابيك ألوميتال حسب الباقة.")
+        else:
+            st.markdown("- Full plumbing (2 bathrooms + kitchen) according to package.")
+            st.markdown("- Complete electrical works + panel + breakers.")
+            st.markdown("- Plastering, gypsum and false ceilings as per design.")
+            st.markdown("- Flooring (ceramic / porcelain / HDF / engineered wood).")
+            st.markdown("- Interior paints (Jotun / GLC) based on level.")
+            st.markdown("- Refrigerant piping for AC.")
+            st.markdown("- Internal doors + main armored door.")
+            st.markdown("- Aluminum windows according to package.")
+
+    with st.expander(t["optional_items_title"], expanded=False):
+        if lang == "ar":
+            st.markdown("- مطابخ مخصصة (HPL / Polylic / Gloss Max).")
+            st.markdown("- فرش غرف نوم، ريسبشن، وسفرة بمستويات مختلفة.")
+            st.markdown("- أنظمة Smart Home (إنارة، تكييف، صوت، ستائر).")
+            st.markmarkdown("- لاندسكيب، برجولات، نجيلة صناعي، إضاءة خارجية.")
+            st.markdown("- شاتر وموتور، كبائن شاور زجاج، ورق حائط مستورد.")
+        else:
+            st.markdown("- Custom kitchens (HPL / Polylic / Gloss Max).")
+            st.markdown("- Furniture for bedrooms, reception and dining room.")
+            st.markdown("- Smart Home systems (lighting, AC, audio, curtains).")
+            st.markdown("- Landscape, pergolas, artificial grass, outdoor lighting.")
+            st.markdown("- Motorized shutters, glass shower cabins, imported wallpaper.")
+
+# ================== 12) Call To Action (WhatsApp) ==================
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown(f"### {t['cta_title']}")
+
+msg_lines = [
+    f"Language: {lang_choice}",
+    f"Area: {area} m²",
+    f"Package: {pkg_name}",
+    f"Finishing Level: {finishing_level}",
+    f"Average Price: {avg_price:,.0f} EGP"
+]
+msg = "\n".join(msg_lines)
+wa_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={urllib.parse.quote(msg)}"
+
+st.link_button(t["cta_button"], wa_link)
