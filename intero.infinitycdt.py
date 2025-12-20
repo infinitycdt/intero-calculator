@@ -9,6 +9,28 @@ st.set_page_config(
     layout="wide"
 )
 
+# ===== Meta Pixel (Facebook) =====
+meta_pixel_code = """
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1893075388269127');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1893075388269127&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+"""
+st.markdown(meta_pixel_code, unsafe_allow_html=True)
+
 # ================== 2) Constants & Branding ==================
 BRAND_GOLD = "#D4AF37"
 BRAND_BLACK = "#0D0D0D"
@@ -153,10 +175,10 @@ ITEMS = [
         "i-Elite_UP": 8000.0, "i-Elite_Total": 8000.0, "i-Elite_Notes": "تغليف أرضيات", "i-Elite_Status": "أساسي",
         "i-Signature_UP": 15000.0, "i-Signature_Total": 15000.0, "i-Signature_Notes": "حماية شاملة", "i-Signature_Status": "أساسي",
     },
-    # ... أكمل باقي البنود من جدول "تسعير البنود" في الإكسل بنفس الهيكل ...
+    # ... أكمل باقي البنود من جدول "تسعير البنود" في الإكسل بنفس الهيكل ... [file:76]
 ]
 
-# ================== 6) Optional Big Items (من قسم البنود الناقصة/الإضافية) ==================
+# ================== 6) Optional Big Items ==================
 OPTIONAL_BIG_ITEMS = [
     {
         "name": "شاتر وموتور (Motorized Shutter)",
@@ -172,7 +194,7 @@ OPTIONAL_BIG_ITEMS = [
         "note": "زجاج 10مم + ستانلس 304",
         "included_in": "Elite - Signature",
     },
-    # ... أكمل بقية الـ 20 بند من جدول البنود الاختيارية في الإكسل ...
+    # ... أكمل بقية البنود الاختيارية من شيت الإضافات ... [file:76]
 ]
 
 # ================== 7) Helper Functions ==================
@@ -336,7 +358,7 @@ st.markdown("### " + t["summary_title"])
 st.write(f"- الإجمالي الأساسي: {base_total:,.0f} EGP")
 st.write(f"- الإضافات: {extra_total:,.0f} EGP")
 st.write(f"- الإجمالي قبل الضريبة: {subtotal:,.0f} EGP")
-st.write(f"- الضريبة (15%): {vat:,.0f} EGP")
+st.write(f"- الضريبة (14%): {vat:,.0f} EGP")
 st.write(f"- الإجمالي النهائي (شامل الضريبة): {grand_total:,.0f} EGP")
 
 st.markdown("#### " + t["payment_plan"])
