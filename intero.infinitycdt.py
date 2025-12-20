@@ -1,22 +1,30 @@
 import streamlit as st
 import pandas as pd
 import urllib.parse
+import uuid
+import datetime
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
-# ================== 1) Page Config ==================
+# ======================================================
+# 1) PAGE CONFIG
+# ======================================================
 st.set_page_config(
     page_title="Infinity CDT | Finishing System",
     page_icon="🏗️",
     layout="wide"
 )
 
-# ===== Meta Pixel (Facebook) =====
-meta_pixel_code = """
+# ======================================================
+# 2) META PIXEL
+# ======================================================
+META_PIXEL = """
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+if(!f._fbq)f._fbq=n;n.push=n.loaded=!0;n.version='2.0';
 n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
@@ -29,9 +37,30 @@ src="https://www.facebook.com/tr?id=1893075388269127&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 """
-st.markdown(meta_pixel_code, unsafe_allow_html=True)
+st.markdown(META_PIXEL, unsafe_allow_html=True)
 
-# ================== 2) Constants & Branding ==================
+# ======================================================
+# 3) GLOBAL STYLE (تحسين الموبايل)
+# ======================================================
+st.markdown(
+    """
+    <style>
+    .stTextInput input, .stNumberInput input, .stSelectbox div[data-baseweb="select"] {
+        font-size: 16px;
+    }
+    .block-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        max-width: 1100px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ======================================================
+# 4) BRANDING & CONSTANTS
+# ======================================================
 BRAND_GOLD = "#D4AF37"
 BRAND_BLACK = "#0D0D0D"
 BRAND_WHITE = "#FFFFFF"
@@ -39,9 +68,14 @@ TEXT_COLOR = "#333333"
 
 WHATSAPP_NUMBER = "201062796287"
 BASE_AREA = 100
-VAT_RATE = 0.15
+VAT_RATE = 0.14  # الضريبة 14%
 
-# ================== 3) Language Dictionary ==================
+CRM_SHEET_NAME = "Infinity_Leads"
+GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1s775JnxtYjOhK60eo1-WeGEse87DonSdguvQiU0tDDs/edit?usp=sharing"
+
+# ======================================================
+# 5) LANGUAGE STRINGS
+# ======================================================
 STRINGS = {
     "ar": {
         "app_title": "نظام تسعير التشطيب - Infinity CDT",
@@ -72,6 +106,8 @@ STRINGS = {
         "whatsapp_error": "من فضلك أدخل اسم العميل ورقم الموبايل أولاً.",
         "summary_title": "ملخص السعر النهائي",
         "payment_plan": "نظام السداد المقترح",
+        "lead_saved": "تم حفظ بياناتك في النظام، وسنتواصل معك قريباً.",
+        "lead_error": "حدث خطأ أثناء حفظ البيانات في Google Sheet.",
     },
     "en": {
         "app_title": "Finishing Pricing System - Infinity CDT",
@@ -102,10 +138,14 @@ STRINGS = {
         "whatsapp_error": "Please enter client name and mobile first.",
         "summary_title": "Final Price Summary",
         "payment_plan": "Suggested Payment Plan",
-    }
+        "lead_saved": "Your data has been saved, our team will contact you soon.",
+        "lead_error": "Error while saving data to Google Sheet.",
+    },
 }
 
-# ================== 4) Packages (ملخص تنفيذي من الإكسل) ==================
+# ======================================================
+# 6) PACKAGES (من ملف الأسعار 2026)
+# ======================================================
 PACKAGES = {
     "Economy": {
         "label_ar": "Economy (اقتصادي)",
@@ -149,7 +189,9 @@ PACKAGES = {
     },
 }
 
-# ================== 5) Detailed Items (مقتطف – أكمل الباقي من الإكسل) ==================
+# ======================================================
+# 7) DETAILED ITEMS (مقتطف – يمكن استكماله من شيت تسعير البنود)
+# ======================================================
 ITEMS = [
     {
         "section": "أولاً: التجهيزات والموقع (Preliminaries)",
@@ -175,10 +217,12 @@ ITEMS = [
         "i-Elite_UP": 8000.0, "i-Elite_Total": 8000.0, "i-Elite_Notes": "تغليف أرضيات", "i-Elite_Status": "أساسي",
         "i-Signature_UP": 15000.0, "i-Signature_Total": 15000.0, "i-Signature_Notes": "حماية شاملة", "i-Signature_Status": "أساسي",
     },
-    # ... أكمل باقي البنود من جدول "تسعير البنود" في الإكسل بنفس الهيكل ... [file:76]
+    # يمكنك إضافة باقي البنود من شيت "تسعير البنود" بنفس النمط عند الحاجة
 ]
 
-# ================== 6) Optional Big Items ==================
+# ======================================================
+# 8) OPTIONAL BIG ITEMS (من جدول البنود الاختيارية)
+# ======================================================
 OPTIONAL_BIG_ITEMS = [
     {
         "name": "شاتر وموتور (Motorized Shutter)",
@@ -194,10 +238,57 @@ OPTIONAL_BIG_ITEMS = [
         "note": "زجاج 10مم + ستانلس 304",
         "included_in": "Elite - Signature",
     },
-    # ... أكمل بقية البنود الاختيارية من شيت الإضافات ... [file:76]
+    # أضف المزيد إذا احتجت
 ]
 
-# ================== 7) Helper Functions ==================
+# ======================================================
+# 9) GOOGLE SHEETS (CRM)
+# ======================================================
+@st.cache_resource(show_spinner=False)
+def get_gsheet_client():
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive",
+    ]
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        "infinity-crm-key.json", scope
+    )
+    client = gspread.authorize(creds)
+    return client
+
+def append_lead_row(data: dict):
+    try:
+        client = get_gsheet_client()
+        sheet = client.open_by_url(GOOGLE_SHEET_URL).worksheet(CRM_SHEET_NAME)
+    except Exception:
+        return False
+
+    row = [
+        data.get("lead_id"),
+        data.get("timestamp"),
+        data.get("lang"),
+        data.get("client_name"),
+        data.get("client_mobile"),
+        data.get("client_email"),
+        data.get("inspection_area"),
+        data.get("area"),
+        data.get("package"),
+        data.get("base_total"),
+        data.get("extras_total"),
+        data.get("subtotal"),
+        data.get("vat"),
+        data.get("grand_total"),
+        "; ".join([f"{k}:{v}" for k, v in data.get("extras_dict", {}).items()]),
+    ]
+    try:
+        sheet.append_row(row, value_input_option="USER_ENTERED")
+        return True
+    except Exception:
+        return False
+
+# ======================================================
+# 10) HELPERS
+# ======================================================
 def get_items_for_package(pkg_key: str) -> pd.DataFrame:
     rows = []
     for it in ITEMS:
@@ -213,7 +304,6 @@ def get_items_for_package(pkg_key: str) -> pd.DataFrame:
             "ملاحظات": it[f"{pkg_key}_Notes"],
         })
     return pd.DataFrame(rows)
-
 
 def build_whatsapp_message(
     lang, client_name, client_mobile, client_email, inspection_area,
@@ -239,7 +329,7 @@ def build_whatsapp_message(
             lines.append(f"- {k}: {v:,.0f} EGP")
     lines.append("")
     lines.append(f"Subtotal: {subtotal:,.0f} EGP")
-    lines.append(f"VAT (15%): {vat:,.0f} EGP")
+    lines.append(f"VAT (14%): {vat:,.0f} EGP")
     lines.append(f"Grand Total: {grand_total:,.0f} EGP")
     lines.append("")
     lines.append(f"Estimated Min: {min_price:,.0f} EGP")
@@ -248,7 +338,9 @@ def build_whatsapp_message(
     lines.append(f"Approx. Price/m²: {price_per_m2:,.0f} EGP")
     return "\n".join(lines)
 
-# ================== 8) Sidebar: Language & Client Info ==================
+# ======================================================
+# 11) SIDEBAR (LANG + BRAND + SOCIAL + CLIENT FORM)
+# ======================================================
 with st.sidebar:
     lang_choice = st.radio("Language / اللغة", ["العربية", "English"])
     lang = "ar" if lang_choice == "العربية" else "en"
@@ -256,26 +348,41 @@ with st.sidebar:
 
     st.markdown(f"### {t['app_title']}")
     st.markdown("---")
-    st.markdown("**Infinity CDT**")
+    st.markdown("**Infinity for Construction, Decorations, Low Current and IT Solutions**")
     st.caption("Integrated Finishing Pricing System 2026")
 
-    st.markdown(f"#### {t['client_info']}")
-    client_name = st.text_input(t["client_name"])
-    client_mobile = st.text_input(t["client_mobile"])
-    client_email = st.text_input(t["client_email"])
+    st.markdown("#### 🌐 تواصل معنا / Contact")
+    st.markdown("[Facebook](https://www.facebook.com/InfinityCDT)")
+    st.markdown("[Instagram](https://www.instagram.com/InfinityCDT)")
+    st.markdown("[TikTok](https://www.tiktok.com/@infinitycdt)")
+    st.markdown("[Threads](https://www.threads.com/@infinitycdt)")
+    st.markdown("[Website](https://www.intero.infinitycdt.com/)")
+    st.markdown("[WhatsApp](https://wa.me/201062796287)")
+    st.caption("1 Mostafa Al Nahass St, Abbas El Akkad, Nasr Center Building, Cairo, Egypt")
 
-    areas = [
-        "New Cairo", "6th of October", "Sheikh Zayed",
-        "Nasr City", "Heliopolis", "Maadi", "Alexandria", "OTHER"
-    ]
-    inspection_area = st.selectbox(t["inspection_area"], areas, index=len(areas) - 1)
+    with st.expander("🧾 " + t["client_info"], expanded=True):
+        client_name = st.text_input(t["client_name"])
+        client_mobile = st.text_input(t["client_mobile"])
+        client_email = st.text_input(t["client_email"])
 
-# ================== 9) Main Layout: Inputs ==================
+        areas = [
+            "New Cairo", "6th of October", "Sheikh Zayed",
+            "Nasr City", "Heliopolis", "Maadi", "Alexandria", "OTHER"
+        ]
+        inspection_area = st.selectbox(t["inspection_area"], areas, index=len(areas) - 1)
+
+# ======================================================
+# 12) MAIN HEADER
+# ======================================================
 st.title(t["hero_title"])
 st.write(t["hero_sub"])
 
+# ======================================================
+# 13) PROJECT INPUTS
+# ======================================================
 st.markdown("### " + t["project_info"])
-c1, c2 = st.columns(2)
+c1 = st.container()
+c2 = st.container()
 
 with c1:
     area = st.number_input(t["area_label"], min_value=40, max_value=1000, value=100, step=10)
@@ -289,7 +396,9 @@ with c2:
         def fmt(k): return PACKAGES[k]["label_en"] + " - " + PACKAGES[k]["tag_en"]
     pkg_key = st.selectbox(t["pkg_label"], options=options, format_func=fmt)
 
-# ================== 10) Optional Items ==================
+# ======================================================
+# 14) OPTIONAL ITEMS
+# ======================================================
 st.markdown("### " + t["options_title"])
 
 extra_items_details = {}
@@ -330,7 +439,9 @@ with st.expander("البنود الاختيارية المتقدمة (من جد�
                 )
                 extra_items_details[opt["name"]] = val
 
-# ================== 11) Calculations ==================
+# ======================================================
+# 15) CALCULATIONS
+# ======================================================
 base_total = PACKAGES[pkg_key]["total"] * (area / BASE_AREA)
 extra_total = sum(extra_items_details.values())
 subtotal = base_total + extra_total
@@ -342,7 +453,9 @@ min_price = avg_price * 0.9
 max_price = avg_price * 1.1
 price_per_m2 = avg_price / area if area else 0
 
-# ================== 12) Result Section ==================
+# ======================================================
+# 16) RESULT SECTION
+# ======================================================
 st.markdown("### " + t["result_title"])
 st.caption(t["result_sub"])
 
@@ -366,13 +479,18 @@ st.write("- 35% من التكلفة عند التعاقد")
 st.write("- 30% عند الانتهاء من مرحلة التأسيس (كهرباء – سباكة – تكييف)")
 st.write("- 30% عند الانتهاء من السيراميك والجبسمبورد والتسليم النهائي")
 
-# ================== 13) Tabs: Details & Comparison ==================
+# ======================================================
+# 17) TABS (DETAILS + COMPARISON)
+# ======================================================
 tab1, tab2 = st.tabs([STRINGS[lang]["details_tab"], STRINGS[lang]["compare_tab"]])
 
 with tab1:
     st.markdown("#### " + STRINGS[lang]["core_items_title"])
-    df_items = get_items_for_package(pkg_key)
-    st.dataframe(df_items, use_container_width=True)
+    if ITEMS:
+        df_items = get_items_for_package(pkg_key)
+        st.dataframe(df_items, use_container_width=True)
+    else:
+        st.info("سيتم إضافة تفاصيل البنود الكاملة لاحقاً.")
 
 with tab2:
     st.markdown("#### ملخص الباقات الخمس")
@@ -387,13 +505,42 @@ with tab2:
     df_comp = pd.DataFrame(comp_rows)
     st.table(df_comp)
 
-# ================== 14) WhatsApp CTA ==================
+# ======================================================
+# 18) WHATSAPP + CRM SAVE
+# ======================================================
 st.markdown("### " + t["cta_title"])
 
 if st.button(t["cta_button"]):
     if not client_name or not client_mobile:
         st.error(t["whatsapp_error"])
     else:
+        lead_id = str(uuid.uuid4())
+        ts = datetime.datetime.now().isoformat()
+
+        lead_data = {
+            "lead_id": lead_id,
+            "timestamp": ts,
+            "lang": lang,
+            "client_name": client_name,
+            "client_mobile": client_mobile,
+            "client_email": client_email,
+            "inspection_area": inspection_area,
+            "area": area,
+            "package": pkg_key,
+            "base_total": base_total,
+            "extras_total": extra_total,
+            "subtotal": subtotal,
+            "vat": vat,
+            "grand_total": grand_total,
+            "extras_dict": extra_items_details,
+        }
+
+        saved = append_lead_row(lead_data)
+        if saved:
+            st.success(t["lead_saved"])
+        else:
+            st.warning(t["lead_error"])
+
         msg = build_whatsapp_message(
             lang, client_name, client_mobile, client_email, inspection_area,
             area, pkg_key, base_total, extra_items_details,
