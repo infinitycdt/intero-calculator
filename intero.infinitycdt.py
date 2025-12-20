@@ -68,10 +68,10 @@ TEXT_COLOR = "#333333"
 
 WHATSAPP_NUMBER = "201062796287"
 BASE_AREA = 100
-VAT_RATE = 0.14  # الضريبة 14%
+VAT_RATE = 0.14  # الضريبة 14% بدل 15% [file:78]
 
 CRM_SHEET_NAME = "Infinity_Leads"
-GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1s775JnxtYjOhK60eo1-WeGEse87DonSdguvQiU0tDDs/edit?usp=sharing"
+GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/1s775JnxtYjOhK60eo1-WeGEse87DonSdguvQiU0tDDs/edit?usp=sharing"  # [file:78]
 
 # ======================================================
 # 5) LANGUAGE STRINGS
@@ -144,7 +144,7 @@ STRINGS = {
 }
 
 # ======================================================
-# 6) PACKAGES (من ملف الأسعار 2026)
+# 6) PACKAGES (من ملف الأسعار 2026) [file:76]
 # ======================================================
 PACKAGES = {
     "Economy": {
@@ -190,7 +190,7 @@ PACKAGES = {
 }
 
 # ======================================================
-# 7) DETAILED ITEMS (مقتطف – يمكن استكماله من شيت تسعير البنود)
+# 7) DETAILED ITEMS (مقتطف – يمكنك استكماله من شيت تسعير البنود) [file:76]
 # ======================================================
 ITEMS = [
     {
@@ -217,11 +217,11 @@ ITEMS = [
         "i-Elite_UP": 8000.0, "i-Elite_Total": 8000.0, "i-Elite_Notes": "تغليف أرضيات", "i-Elite_Status": "أساسي",
         "i-Signature_UP": 15000.0, "i-Signature_Total": 15000.0, "i-Signature_Notes": "حماية شاملة", "i-Signature_Status": "أساسي",
     },
-    # يمكنك إضافة باقي البنود من شيت "تسعير البنود" بنفس النمط عند الحاجة
+    # أكمل باقي البنود من شيت "تسعير البنود" بنفس الهيكل عند الحاجة [file:76]
 ]
 
 # ======================================================
-# 8) OPTIONAL BIG ITEMS (من جدول البنود الاختيارية)
+# 8) OPTIONAL BIG ITEMS (من جدول البنود الاختيارية) [file:76]
 # ======================================================
 OPTIONAL_BIG_ITEMS = [
     {
@@ -238,11 +238,11 @@ OPTIONAL_BIG_ITEMS = [
         "note": "زجاج 10مم + ستانلس 304",
         "included_in": "Elite - Signature",
     },
-    # أضف المزيد إذا احتجت
+    # يمكنك إضافة بقية البنود الاختيارية هنا
 ]
 
 # ======================================================
-# 9) GOOGLE SHEETS (CRM)
+# 9) GOOGLE SHEETS (CRM) [file:78]
 # ======================================================
 @st.cache_resource(show_spinner=False)
 def get_gsheet_client():
@@ -378,7 +378,7 @@ st.title(t["hero_title"])
 st.write(t["hero_sub"])
 
 # ======================================================
-# 13) PROJECT INPUTS
+# 13) PROJECT INPUTS (تصميم بسيط مناسب للموبايل)
 # ======================================================
 st.markdown("### " + t["project_info"])
 c1 = st.container()
