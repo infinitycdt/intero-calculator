@@ -1,210 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>Infinity CDT – Integrated Finishing System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<title>Infinity CDT - Integrated Finishing System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Meta Pixel -->
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1893075388269127');
-    fbq('track', 'PageView');
-  </script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #fff;
-      color: #111;
-    }
-    header {
-      position: sticky;
-      top: 0;
-      background: #000;
-      color: #fff;
-      padding: 15px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header img {
-      height: 45px;
-    }
-    .lang-toggle button {
-      background: transparent;
-      border: 1px solid gold;
-      color: gold;
-      padding: 5px 12px;
-      cursor: pointer;
-      margin-left: 5px;
-    }
-    section {
-      padding: 60px 30px;
-      max-width: 1100px;
-      margin: auto;
-    }
-    h1, h2 {
-      color: #000;
-    }
-    .gold {
-      color: #b89b5e;
-    }
-    .packages {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      border: 1px solid #ddd;
-      padding: 20px;
-      border-radius: 8px;
-    }
-    .cta {
-      background: #b30000;
-      color: #fff;
-      padding: 12px 25px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    footer {
-      background: #000;
-      color: #fff;
-      padding: 30px;
-      text-align: center;
-    }
-  </style>
+<style>
+body{margin:0;font-family:'Cairo',sans-serif;background:#fff;color:#111}
+header{text-align:center;padding:25px;border-bottom:1px solid #eee}
+header img{max-width:200px}
+.container{max-width:1200px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:25px;margin-top:20px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+label{font-weight:600}
+input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #ccc}
+button{background:#000;color:#fff;border:0;padding:14px 22px;border-radius:12px;font-size:16px;cursor:pointer}
+button:hover{opacity:.9}
+.summary-box{background:#f7f7f7;border-radius:12px;padding:12px;margin-bottom:8px}
+.error{color:#b30000;font-weight:600}
+footer{text-align:center;padding:30px;color:#666}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div>
-    <img src="logo.png" alt="Infinity CDT Logo"/>
-  </div>
-  <div class="lang-toggle">
-    <button onclick="setLang('ar')">AR</button>
-    <button onclick="setLang('en')">EN</button>
-  </div>
+  <img src="logo.png" alt="Infinity CDT">
+  <h1>Infinity CDT – نظام تشطيب متكامل</h1>
 </header>
 
-<section id="hero">
-  <h1 id="hero-title" class="gold">Integrated Finishing System</h1>
-  <p id="hero-desc">
-    Choose your package, calculate your cost, and let Infinity CDT handle the rest.
-  </p>
-</section>
+<div class="container">
 
-<section>
-  <h2 id="packages-title">5 Finishing Packages</h2>
-  <div class="packages">
-    <div class="card">Economic</div>
-    <div class="card">Standard</div>
-    <div class="card">Plus</div>
-    <div class="card">Premium</div>
-    <div class="card">Luxury</div>
+<!-- بيانات العميل -->
+<div class="card">
+<h2>بيانات العميل</h2>
+<div class="row">
+  <div>
+    <label>الاسم *</label>
+    <input id="clientName">
   </div>
-</section>
+  <div>
+    <label>رقم الموبايل *</label>
+    <input id="clientPhone" placeholder="01XXXXXXXXX">
+  </div>
+  <div>
+    <label>البريد الإلكتروني (اختياري)</label>
+    <input id="clientEmail">
+  </div>
+  <div>
+    <label>الموقع / المنطقة *</label>
+    <select id="clientLocation">
+      <option value="">اختر المنطقة</option>
+      <option>مصر الجديدة</option>
+      <option>مدينة نصر</option>
+      <option>التجمع</option>
+      <option>القطامية</option>
+      <option>المعادي</option>
+      <option>زهراء المعادي</option>
+      <option>مدينتي</option>
+      <option>الشروق</option>
+      <option>الرحاب</option>
+      <option>بدر</option>
+      <option>العبور</option>
+      <option>العاصمة الادارية</option>
+    </select>
+  </div>
+</div>
+<p id="zoneError" class="error"></p>
+</div>
 
-<section>
-  <h2 id="calc-title">Cost Calculator</h2>
+<!-- بيانات المشروع -->
+<div class="card">
+<h2>بيانات المشروع</h2>
+<div class="row">
+  <div>
+    <label>المساحة (م²)</label>
+    <input type="number" id="area" value="120">
+  </div>
+  <div>
+    <label>الباقة</label>
+    <select id="packageSelect">
+      <option value="">جاري تحميل الباقات...</option>
+    </select>
+  </div>
+</div>
+</div>
 
-  <input id="name" placeholder="Name"/>
-  <input id="phone" placeholder="Phone"/>
-  <input id="area" type="number" placeholder="Area (m²)"/>
+<!-- إضافات -->
+<div class="card">
+<h2>إضافات اختيارية</h2>
+<div class="row">
+  <label><input type="checkbox" data-price="25000"> مطبخ</label>
+  <label><input type="checkbox" data-price="60000"> فرش</label>
+  <label><input type="checkbox" data-price="50000"> سمارت هوم</label>
+  <label><input type="checkbox" data-price="30000"> لاندسكيب</label>
+</div>
+</div>
 
-  <select id="location">
-    <option>New Cairo</option>
-    <option>Nasr City</option>
-    <option>Heliopolis</option>
-    <option>Maadi</option>
-    <option>Madinaty</option>
-    <option>El Shorouk</option>
-    <option>El Rehab</option>
-    <option>New Capital</option>
-  </select>
+<div class="card">
+<button onclick="calculate()">عرض السعر</button>
+</div>
 
-  <select id="package">
-    <option value="8000">Economic</option>
-    <option value="10000">Standard</option>
-    <option value="12000">Plus</option>
-    <option value="15000">Premium</option>
-    <option value="18000">Luxury</option>
-  </select>
+<!-- عرض السعر -->
+<div class="card">
+<h2>عرض سعر مخصص</h2>
+<div id="quotation"></div>
+<button onclick="sendWhatsApp()">إرسال على واتساب</button>
+</div>
 
-  <button class="cta" onclick="calculate()">Calculate & WhatsApp</button>
-
-  <h3 id="result"></h3>
-</section>
+</div>
 
 <footer>
-  <p>
-    Infinity CDT – Construction & Decoration<br/>
-    WhatsApp: +2 01062796287
-  </p>
+© Infinity CDT – Construction & Decoration
 </footer>
 
 <script>
-  let lang = 'en';
+// ===== الإعدادات =====
+const SHEET_URL = "PUT_YOUR_PUBLISHED_CSV_LINK_HERE";
+const VAT = 0.14;
 
-  const text = {
-    en: {
-      heroTitle: "Integrated Finishing System",
-      heroDesc: "Choose your package, calculate your cost, and let Infinity CDT handle the rest.",
-      packages: "5 Finishing Packages",
-      calc: "Cost Calculator"
-    },
-    ar: {
-      heroTitle: "نظام تشطيب متكامل",
-      heroDesc: "اختار الباقة، احسب التكلفة، وسيب الباقي على Infinity CDT.",
-      packages: "٥ باقات تشطيب",
-      calc: "حاسبة التكلفة"
+const ZONES = [
+"مصر الجديدة","مدينة نصر","التجمع","القطامية","المعادي",
+"زهراء المعادي","مدينتي","الشروق","الرحاب",
+"بدر","العبور","العاصمة الادارية"
+];
+
+let PACKAGES = {};
+let FINAL_TOTAL = 0;
+
+// تحميل الباقات
+fetch(SHEET_URL)
+.then(res => res.text())
+.then(csv => {
+  const rows = csv.split("\n").slice(1);
+  const select = document.getElementById("packageSelect");
+  select.innerHTML = '<option value="">اختر الباقة</option>';
+
+  rows.forEach(r=>{
+    const [name, price] = r.split(",");
+    if(name && price){
+      PACKAGES[name.trim()] = Number(price);
+      const opt = document.createElement("option");
+      opt.value = name.trim();
+      opt.textContent = `${name.trim()} - ${Number(price).toLocaleString()} ج/م²`;
+      select.appendChild(opt);
     }
-  };
+  });
+});
 
-  function setLang(l) {
-    lang = l;
-    document.getElementById("hero-title").innerText = text[l].heroTitle;
-    document.getElementById("hero-desc").innerText = text[l].heroDesc;
-    document.getElementById("packages-title").innerText = text[l].packages;
-    document.getElementById("calc-title").innerText = text[l].calc;
+// الحساب
+function calculate(){
+  const name = clientName.value.trim();
+  const phone = clientPhone.value.trim();
+  const location = clientLocation.value;
+  const area = Number(document.getElementById("area").value);
+  const pkg = packageSelect.value;
+
+  if(!name || !phone || !location || !pkg){
+    alert("من فضلك أكمل جميع البيانات الأساسية");
+    return;
   }
 
-  function calculate() {
-    const area = document.getElementById("area").value;
-    const rate = document.getElementById("package").value;
-    const total = area * rate * 1.14;
+  if(!ZONES.includes(location)){
+    zoneError.innerText="نأسف، المنطقة خارج نطاق الخدمة";
+    return;
+  } else zoneError.innerText="";
 
-    fbq('track', 'Lead');
+  let extras = 0;
+  document.querySelectorAll("input[type=checkbox]:checked")
+    .forEach(e=>extras+=Number(e.dataset.price));
 
-    document.getElementById("result").innerText =
-      "Estimated Total: " + total.toLocaleString() + " EGP";
+  const base = PACKAGES[pkg] * area;
+  const subtotal = base + extras;
+  const vat = subtotal * VAT;
+  FINAL_TOTAL = subtotal + vat;
 
-    const msg =
-`Client Name: ${name.value}
-Phone: ${phone.value}
-Area: ${area} m²
-Location: ${location.value}
-Package: ${package.options[package.selectedIndex].text}
-Final Price: ${total.toLocaleString()} EGP`;
+  quotation.innerHTML = `
+    <div class="summary-box">الاسم: <b>${name}</b></div>
+    <div class="summary-box">الموبايل: <b>${phone}</b></div>
+    <div class="summary-box">المنطقة: <b>${location}</b></div>
+    <div class="summary-box">الباقة: <b>${pkg}</b></div>
+    <div class="summary-box">السعر الأساسي: <b>${base.toLocaleString()} ج</b></div>
+    <div class="summary-box">الإضافات: <b>${extras.toLocaleString()} ج</b></div>
+    <div class="summary-box">الضريبة: <b>${vat.toLocaleString()} ج</b></div>
+    <div class="summary-box"><b>الإجمالي: ${FINAL_TOTAL.toLocaleString()} ج</b></div>
+  `;
+}
 
-    window.location.href =
-      "https://wa.me/201062796287?text=" + encodeURIComponent(msg);
-  }
+function sendWhatsApp(){
+  if(!FINAL_TOTAL){alert("احسب السعر أولا");return;}
+  const msg = quotation.innerText;
+  window.open("https://wa.me/201062796287?text="+encodeURIComponent(msg));
+}
 </script>
 
 </body>
